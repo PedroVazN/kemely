@@ -47,6 +47,18 @@ const CorretoraContainer = styled.div`
   position: relative;
   overflow: hidden;
   animation: fadeInUp 0.8s ease-out;
+  
+  @media (max-width: 768px) {
+    padding: 20px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+  }
 
   &::before {
     content: '';

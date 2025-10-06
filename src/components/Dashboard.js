@@ -25,6 +25,14 @@ import { ptBR } from 'date-fns/locale';
 const DashboardContainer = styled.div`
   padding: 32px 0;
   animation: fadeInUp 0.8s ease-out;
+  
+  @media (max-width: 768px) {
+    padding: 20px 0;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 15px 0;
+  }
 `;
 
 const DashboardGrid = styled.div`
@@ -32,6 +40,22 @@ const DashboardGrid = styled.div`
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 24px;
   margin-bottom: 32px;
+  
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  
+  @media (max-width: 480px) {
+    gap: 12px;
+    margin-bottom: 20px;
+  }
 `;
 
 const MainCard = styled(motion.div)`
@@ -44,6 +68,16 @@ const MainCard = styled(motion.div)`
   border: 1px solid #404040;
   position: relative;
   overflow: hidden;
+  
+  @media (max-width: 768px) {
+    padding: 24px;
+    border-radius: 16px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 20px;
+    border-radius: 12px;
+  }
 
   &::before {
     content: '';

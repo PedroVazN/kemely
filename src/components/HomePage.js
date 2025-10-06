@@ -46,14 +46,14 @@ const glow = keyframes`
 // Container principal
 const HomeContainer = styled.div`
   min-height: 100vh;
-  max-height: 100vh;
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%, #0a0a0a 100%);
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 10px;
+  padding: 20px;
   
   &::before {
     content: '';
@@ -171,18 +171,27 @@ const MainContent = styled.div`
   text-align: left;
   max-width: 1200px;
   width: 100%;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: auto 1fr auto;
-  gap: 15px;
-  padding: 20px;
-  align-items: center;
+  gap: 30px;
+  padding: 40px;
+  align-items: start;
   
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto auto;
+    gap: 20px;
+    padding: 30px;
+  }
+  
+  @media (max-width: 768px) {
+    gap: 15px;
+    padding: 20px;
+  }
+  
+  @media (max-width: 480px) {
     gap: 10px;
     padding: 15px;
   }
@@ -199,64 +208,98 @@ const TimeDisplay = styled(motion.div)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 15px;
+  gap: 15px;
+  margin-bottom: 20px;
   color: rgba(255, 255, 255, 0.9);
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 500;
+  
+  @media (max-width: 768px) {
+    gap: 10px;
+    margin-bottom: 15px;
+    font-size: 1rem;
+  }
 `;
 
 const TimeText = styled.div`
-  font-size: 2.5rem;
+  font-size: 3.5rem;
   font-weight: 900;
   color: white;
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
-  margin-bottom: 8px;
-  letter-spacing: 2px;
+  margin-bottom: 10px;
+  letter-spacing: 3px;
+  
+  @media (max-width: 1024px) {
+    font-size: 3rem;
+  }
   
   @media (max-width: 768px) {
+    font-size: 2.5rem;
+    letter-spacing: 2px;
+  }
+  
+  @media (max-width: 480px) {
     font-size: 2rem;
+    letter-spacing: 1px;
   }
 `;
 
 const DateText = styled.div`
-  font-size: 1rem;
+  font-size: 1.2rem;
   font-weight: 500;
   color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 15px;
+  margin-bottom: 20px;
   text-transform: capitalize;
   
   @media (max-width: 768px) {
+    font-size: 1rem;
+    margin-bottom: 15px;
+  }
+  
+  @media (max-width: 480px) {
     font-size: 0.9rem;
   }
 `;
 
 const Title = styled(motion.h1)`
-  font-size: 3rem;
+  font-size: 4rem;
   font-weight: 900;
   background: linear-gradient(135deg, #ffffff 0%, #3b82f6 50%, #f59e0b 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  margin: 0 0 10px 0;
+  margin: 0 0 15px 0;
   text-shadow: 0 4px 20px rgba(59, 130, 246, 0.5);
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   animation: ${pulse} 4s ease-in-out infinite;
   
+  @media (max-width: 1024px) {
+    font-size: 3.5rem;
+  }
+  
   @media (max-width: 768px) {
+    font-size: 2.8rem;
+    letter-spacing: 1px;
+  }
+  
+  @media (max-width: 480px) {
     font-size: 2.2rem;
   }
 `;
 
 const Subtitle = styled(motion.p)`
-  font-size: 1rem;
+  font-size: 1.3rem;
   color: rgba(255, 255, 255, 0.7);
-  margin: 0 0 10px 0;
+  margin: 0 0 15px 0;
   font-weight: 400;
   letter-spacing: 0.01em;
   
   @media (max-width: 768px) {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 1rem;
   }
 `;
 
@@ -264,13 +307,13 @@ const Subtitle = styled(motion.p)`
 const CorretoraCard = styled(motion.div)`
   background: rgba(26, 26, 26, 0.9);
   backdrop-filter: blur(30px);
-  border: 2px solid rgba(59, 130, 246, 0.4);
-  border-radius: 20px;
-  padding: 20px;
+  border: 3px solid rgba(59, 130, 246, 0.4);
+  border-radius: 25px;
+  padding: 30px;
   margin: 0;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
   grid-column: 2;
   grid-row: 2;
   text-align: center;
@@ -278,12 +321,21 @@ const CorretoraCard = styled(motion.div)`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 300px;
-  height: 100%;
+  min-height: 400px;
   
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     grid-column: 1;
     grid-row: 2;
+    min-height: 350px;
+    padding: 25px;
+  }
+  
+  @media (max-width: 768px) {
+    min-height: 300px;
+    padding: 20px;
+  }
+  
+  @media (max-width: 480px) {
     min-height: 250px;
     padding: 15px;
   }
@@ -302,9 +354,9 @@ const CorretoraCard = styled(motion.div)`
   }
   
   &:hover {
-    transform: translateY(-5px) scale(1.01);
+    transform: translateY(-8px) scale(1.02);
     border-color: rgba(59, 130, 246, 0.8);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
 
     &::before {
       opacity: 1;
@@ -313,35 +365,47 @@ const CorretoraCard = styled(motion.div)`
 `;
 
 const CorretoraImage = styled.div`
-  width: 120px;
-  height: 120px;
+  width: 180px;
+  height: 180px;
   border-radius: 50%;
-  margin: 0 auto 15px;
+  margin: 0 auto 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 
-    0 8px 25px rgba(0, 0, 0, 0.8),
-    0 0 0 2px rgba(59, 130, 246, 0.5),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    0 12px 35px rgba(0, 0, 0, 0.8),
+    0 0 0 3px rgba(59, 130, 246, 0.5),
+    inset 0 0 0 2px rgba(255, 255, 255, 0.1);
   position: relative;
-  border: 2px solid rgba(59, 130, 246, 0.6);
+  border: 3px solid rgba(59, 130, 246, 0.6);
   overflow: hidden;
   z-index: 2;
   
+  @media (max-width: 1024px) {
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 18px;
+  }
+  
   @media (max-width: 768px) {
-    width: 100px;
-    height: 100px;
-    margin: 0 auto 10px;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 15px;
+  }
+  
+  @media (max-width: 480px) {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 12px;
   }
   
   &::after {
     content: '';
     position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
     border-radius: 50%;
     background: linear-gradient(45deg, rgba(59, 130, 246, 0.4), rgba(245, 158, 11, 0.3), rgba(16, 185, 129, 0.3));
     z-index: -1;
@@ -349,31 +413,43 @@ const CorretoraImage = styled.div`
 `;
 
 const CorretoraName = styled.h2`
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 800;
   color: white;
-  margin: 0 0 8px 0;
+  margin: 0 0 12px 0;
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
   letter-spacing: 1px;
   position: relative;
   z-index: 2;
   
+  @media (max-width: 1024px) {
+    font-size: 1.8rem;
+  }
+  
   @media (max-width: 768px) {
-    font-size: 1.3rem;
+    font-size: 1.6rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 1.4rem;
   }
 `;
 
 const CorretoraTitle = styled.p`
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   color: rgba(255, 255, 255, 0.8);
   position: relative;
   z-index: 2;
-  margin: 0 0 5px 0;
+  margin: 0 0 8px 0;
   font-weight: 400;
   letter-spacing: 0.01em;
   
   @media (max-width: 768px) {
-    font-size: 0.8rem;
+    font-size: 1rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
   }
 `;
 
@@ -381,12 +457,12 @@ const CorretoraTitle = styled.p`
 const QuoteSection = styled(motion.div)`
   background: rgba(26, 26, 26, 0.9);
   backdrop-filter: blur(30px);
-  border: 2px solid rgba(245, 158, 11, 0.4);
-  border-radius: 20px;
-  padding: 20px;
+  border: 3px solid rgba(245, 158, 11, 0.4);
+  border-radius: 25px;
+  padding: 30px;
   margin: 0;
   position: relative;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
   grid-column: 1;
   grid-row: 2;
   text-align: center;
@@ -394,65 +470,98 @@ const QuoteSection = styled(motion.div)`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 300px;
-  height: 100%;
+  min-height: 400px;
   
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     grid-column: 1;
     grid-row: 3;
-    min-height: 200px;
+    min-height: 350px;
+    padding: 25px;
+  }
+  
+  @media (max-width: 768px) {
+    min-height: 300px;
+    padding: 20px;
+  }
+  
+  @media (max-width: 480px) {
+    min-height: 250px;
     padding: 15px;
   }
   
   &:hover {
-    transform: translateY(-5px) scale(1.01);
+    transform: translateY(-8px) scale(1.02);
     border-color: rgba(245, 158, 11, 0.8);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.9);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
   }
 `;
 
 const QuoteIcon = styled.div`
-  font-size: 1.8rem;
+  font-size: 2.5rem;
   color: rgba(245, 158, 11, 0.8);
-  margin-bottom: 12px;
+  margin-bottom: 20px;
   position: relative;
   z-index: 2;
   
+  @media (max-width: 1024px) {
+    font-size: 2.2rem;
+    margin-bottom: 18px;
+  }
+  
   @media (max-width: 768px) {
-    font-size: 1.5rem;
-    margin-bottom: 8px;
+    font-size: 2rem;
+    margin-bottom: 15px;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 1.8rem;
+    margin-bottom: 12px;
   }
 `;
 
 const QuoteText = styled.p`
-  font-size: 1rem;
+  font-size: 1.2rem;
   color: rgba(255, 255, 255, 0.95);
   font-style: italic;
-  margin: 0 0 10px 0;
-  line-height: 1.5;
+  margin: 0 0 15px 0;
+  line-height: 1.6;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-  letter-spacing: 0.3px;
+  letter-spacing: 0.5px;
   position: relative;
   z-index: 2;
   font-weight: 500;
   
+  @media (max-width: 1024px) {
+    font-size: 1.1rem;
+    line-height: 1.5;
+  }
+  
   @media (max-width: 768px) {
-    font-size: 0.9rem;
+    font-size: 1rem;
     line-height: 1.4;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
+    line-height: 1.3;
   }
 `;
 
 const QuoteAuthor = styled.p`
-  font-size: 0.8rem;
+  font-size: 1rem;
   color: rgba(255, 255, 255, 0.7);
   margin: 0;
   font-weight: 400;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
   position: relative;
   z-index: 2;
   
   @media (max-width: 768px) {
-    font-size: 0.7rem;
+    font-size: 0.9rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 0.8rem;
   }
 `;
 
@@ -462,29 +571,42 @@ const EnterButton = styled(motion.button)`
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(29, 78, 216, 0.2) 100%);
   backdrop-filter: blur(30px);
   color: white;
-  border: 2px solid rgba(59, 130, 246, 0.5);
-  border-radius: 15px;
-  padding: 15px 30px;
-  font-size: 1rem;
+  border: 3px solid rgba(59, 130, 246, 0.5);
+  border-radius: 20px;
+  padding: 20px 40px;
+  font-size: 1.2rem;
   font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   margin: 0 auto;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8);
   position: relative;
   overflow: hidden;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 2px;
   transition: all 0.4s ease;
   grid-column: 1 / -1;
   grid-row: 3;
   animation: ${glow} 4s ease-in-out infinite;
   
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
     grid-column: 1;
     grid-row: 4;
+    padding: 18px 35px;
+    font-size: 1.1rem;
+    gap: 14px;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 15px 30px;
+    font-size: 1rem;
+    gap: 12px;
+    letter-spacing: 1px;
+  }
+  
+  @media (max-width: 480px) {
     padding: 12px 25px;
     font-size: 0.9rem;
     gap: 10px;
@@ -506,14 +628,14 @@ const EnterButton = styled(motion.button)`
   }
   
   &:hover {
-    transform: translateY(-3px) scale(1.03);
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.9);
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
     background: linear-gradient(135deg, rgba(59, 130, 246, 0.5) 0%, rgba(29, 78, 216, 0.4) 100%);
     border-color: rgba(59, 130, 246, 0.8);
   }
   
   &:active {
-    transform: translateY(-1px);
+    transform: translateY(-2px);
   }
 `;
 

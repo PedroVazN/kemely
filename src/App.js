@@ -34,6 +34,10 @@ const AppContainer = styled.div`
     pointer-events: none;
     z-index: 0;
   }
+  
+  @media (max-width: 768px) {
+    overflow-x: auto;
+  }
 `;
 
 const HeaderSection = styled.header`
