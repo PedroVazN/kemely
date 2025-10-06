@@ -30,6 +30,14 @@ const HeaderContent = styled.div`
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 24px;
+  
+  @media (max-width: 768px) {
+    padding: 0 16px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 0 12px;
+  }
 `;
 
 const TopBar = styled.div`
@@ -38,6 +46,16 @@ const TopBar = styled.div`
   align-items: center;
   padding: 16px 0;
   min-height: 60px;
+  
+  @media (max-width: 1024px) {
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 12px 0;
+    min-height: 50px;
+  }
 `;
 
 const Logo = styled.div`
@@ -50,6 +68,16 @@ const Logo = styled.div`
   cursor: pointer;
   transition: all 0.2s ease;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    font-size: 1.3rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 1.1rem;
+    gap: 8px;
+  }
 
   &:hover {
     color: #3b82f6;
@@ -61,6 +89,18 @@ const QuickStats = styled.div`
   display: flex;
   gap: 32px;
   align-items: center;
+  
+  @media (max-width: 1200px) {
+    gap: 20px;
+  }
+  
+  @media (max-width: 1024px) {
+    gap: 16px;
+  }
+  
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const StatItem = styled(motion.div)`
@@ -127,6 +167,19 @@ const ActionButtons = styled.div`
   display: flex;
   gap: 12px;
   align-items: center;
+  flex-shrink: 0;
+  
+  @media (max-width: 1200px) {
+    gap: 8px;
+  }
+  
+  @media (max-width: 768px) {
+    gap: 6px;
+  }
+  
+  @media (max-width: 480px) {
+    gap: 4px;
+  }
 `;
 
 const ActionButton = styled(motion.button)`
@@ -155,6 +208,29 @@ const ActionButton = styled(motion.button)`
     '0 4px 16px rgba(59, 130, 246, 0.3)' : 
     'none'
   };
+  white-space: nowrap;
+  
+  @media (max-width: 1200px) {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    gap: 4px;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+    gap: 4px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 4px 8px;
+    font-size: 0.7rem;
+    gap: 2px;
+    
+    .button-text {
+      display: none;
+    }
+  }
 
   &:hover {
     background: ${props => props.variant === 'primary' ? 
@@ -195,6 +271,10 @@ const NavigationBar = styled.div`
   align-items: center;
   padding: 12px 0;
   border-top: 1px solid #404040;
+  
+  @media (max-width: 768px) {
+    padding: 8px 0;
+  }
 `;
 
 const NavItems = styled.div`
@@ -347,16 +427,6 @@ const Header = ({ onAddTransaction, onShowFilters, onExport, onShowCharts, activ
           <Logo>
             {isCorretoraMode ? 'Kemely Corretora' : 'Kemely Financeiro'}
           </Logo>
-          <ActionButton
-            variant="primary"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={onToggleMode}
-            style={{ marginLeft: '16px' }}
-          >
-            {isCorretoraMode ? '💰' : '🏢'}
-            {isCorretoraMode ? 'Financeiro' : 'Corretora'}
-          </ActionButton>
 
           <QuickStats>
             <StatItem
@@ -404,7 +474,7 @@ const Header = ({ onAddTransaction, onShowFilters, onExport, onShowCharts, activ
               onClick={onAddTransaction}
             >
               <Calculator size={16} />
-              Nova Transação
+              <span className="button-text">Nova Transação</span>
             </ActionButton>
 
             <ActionButton
@@ -413,7 +483,7 @@ const Header = ({ onAddTransaction, onShowFilters, onExport, onShowCharts, activ
               onClick={onShowFilters}
             >
               <Filter size={16} />
-              Filtros
+              <span className="button-text">Filtros</span>
             </ActionButton>
 
             <ActionButton
@@ -422,7 +492,17 @@ const Header = ({ onAddTransaction, onShowFilters, onExport, onShowCharts, activ
               onClick={onExport}
             >
               <FileSpreadsheet size={16} />
-              Exportar
+              <span className="button-text">Exportar</span>
+            </ActionButton>
+
+            <ActionButton
+              variant="primary"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={onToggleMode}
+            >
+              {isCorretoraMode ? '💰' : '🏢'}
+              <span className="button-text">{isCorretoraMode ? 'Financeiro' : 'Corretora'}</span>
             </ActionButton>
 
             <MobileMenuButton onClick={() => setMobileMenuOpen(true)}>
