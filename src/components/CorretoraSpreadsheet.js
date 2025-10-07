@@ -440,7 +440,10 @@ const CorretoraSpreadsheet = () => {
   const [showEditLeadModal, setShowEditLeadModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedLead, setSelectedLead] = useState(null);
+  const [selectedAppointment, setSelectedAppointment] = useState(null);
+  const [selectedCommission, setSelectedCommission] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteType, setDeleteType] = useState('lead');
 
   useEffect(() => {
     fetchData();
@@ -529,6 +532,25 @@ const CorretoraSpreadsheet = () => {
 
   const handleDeleteLead = (lead) => {
     setSelectedLead(lead);
+    setSelectedAppointment(null);
+    setSelectedCommission(null);
+    setDeleteType('lead');
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteAppointment = (appointment) => {
+    setSelectedAppointment(appointment);
+    setSelectedLead(null);
+    setSelectedCommission(null);
+    setDeleteType('appointment');
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteCommission = (commission) => {
+    setSelectedCommission(commission);
+    setSelectedLead(null);
+    setSelectedAppointment(null);
+    setDeleteType('commission');
     setShowDeleteModal(true);
   };
 
@@ -555,27 +577,46 @@ const CorretoraSpreadsheet = () => {
   const handleCloseDeleteModal = () => {
     setShowDeleteModal(false);
     setSelectedLead(null);
+    setSelectedAppointment(null);
+    setSelectedCommission(null);
+    setDeleteType('lead');
   };
 
   const handleConfirmDelete = async () => {
-    if (!selectedLead) return;
-
     try {
       setDeleteLoading(true);
       
-      const { error } = await supabase
-        .from('leads')
-        .delete()
-        .eq('id', selectedLead.id);
+      let error;
+      
+      if (deleteType === 'lead' && selectedLead) {
+        const { error: leadError } = await supabase
+          .from('leads')
+          .delete()
+          .eq('id', selectedLead.id);
+        error = leadError;
+      } else if (deleteType === 'appointment' && selectedAppointment) {
+        const { error: appointmentError } = await supabase
+          .from('agendamentos')
+          .delete()
+          .eq('id', selectedAppointment.id);
+        error = appointmentError;
+      } else if (deleteType === 'commission' && selectedCommission) {
+        const { error: commissionError } = await supabase
+          .from('comissoes')
+          .delete()
+          .eq('id', selectedCommission.id);
+        error = commissionError;
+      }
 
       if (error) throw error;
 
-      toast.success('Lead excluído com sucesso!');
+      const itemName = selectedLead?.nome || selectedAppointment?.cliente || selectedCommission?.cliente;
+      toast.success(`${deleteType === 'lead' ? 'Lead' : deleteType === 'appointment' ? 'Agendamento' : 'Comissão'} excluído com sucesso!`);
       fetchData();
       handleCloseDeleteModal();
     } catch (error) {
-      console.error('Erro ao excluir lead:', error);
-      toast.error('Erro ao excluir lead');
+      console.error(`Erro ao excluir ${deleteType}:`, error);
+      toast.error(`Erro ao excluir ${deleteType === 'lead' ? 'lead' : deleteType === 'appointment' ? 'agendamento' : 'comissão'}`);
     } finally {
       setDeleteLoading(false);
     }
@@ -918,7 +959,7 @@ const CorretoraSpreadsheet = () => {
                     <ActionBtn>
                       <Edit size={12} />
                     </ActionBtn>
-                    <ActionBtn>
+                    <ActionBtn onClick={() => handleDeleteAppointment(appointment)}>
                       <Trash2 size={12} />
                     </ActionBtn>
                   </ActionButtons>
@@ -967,7 +1008,7 @@ const CorretoraSpreadsheet = () => {
                     <ActionBtn>
                       <Edit size={12} />
                     </ActionBtn>
-                    <ActionBtn>
+                    <ActionBtn onClick={() => handleDeleteCommission(commission)}>
                       <Trash2 size={12} />
                     </ActionBtn>
                   </ActionButtons>
@@ -1007,9 +1048,9 @@ const CorretoraSpreadsheet = () => {
         isOpen={showDeleteModal}
         onClose={handleCloseDeleteModal}
         onConfirm={handleConfirmDelete}
-        title="Excluir Lead"
-        itemName={selectedLead?.nome}
-        itemType="lead"
+        title={`Excluir ${deleteType === 'lead' ? 'Lead' : deleteType === 'appointment' ? 'Agendamento' : 'Comissão'}`}
+        itemName={selectedLead?.nome || selectedAppointment?.cliente || selectedCommission?.cliente}
+        itemType={deleteType}
         loading={deleteLoading}
       />
     </CorretoraContainer>

@@ -659,7 +659,17 @@ const HomePage = ({ onEnterApp }) => {
   useEffect(() => {
     const fetchQuote = async () => {
       try {
-        const response = await fetch('https://api.quotable.io/random');
+        const response = await fetch('https://api.quotable.io/random', {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          },
+        });
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         const data = await response.json();
         setQuote({
           text: data.content,
@@ -667,7 +677,11 @@ const HomePage = ({ onEnterApp }) => {
         });
       } catch (error) {
         console.error('Erro ao buscar frase:', error);
-        // Manter frase padrão em caso de erro
+        // Usar frase padrão em caso de erro
+        setQuote({
+          text: "O sucesso é a soma de pequenos esforços repetidos dia após dia.",
+          author: "Robert Collier"
+        });
       }
     };
 
