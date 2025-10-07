@@ -85,7 +85,7 @@ const AdvancedFilters = ({ onFiltersChange, onClearFilters }) => {
   });
 
   const categories = {
-    expense: ['Alimentação', 'Transporte', 'Saúde', 'Educação', 'Lazer', 'Casa', 'Outros'],
+    expense: ['Alimentação', 'Transporte', 'Saúde', 'Educação', 'Lazer', 'Casa', 'Devedor', 'Outros'],
     income: ['Salário', 'Freelance', 'Investimentos', 'Vendas', 'Outros']
   };
 

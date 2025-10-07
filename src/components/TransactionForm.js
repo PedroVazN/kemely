@@ -51,7 +51,7 @@ const TransactionForm = ({ onTransactionAdded }) => {
   const [message, setMessage] = useState('');
 
   const categories = {
-    expense: ['Alimentação', 'Transporte', 'Saúde', 'Educação', 'Lazer', 'Casa', 'Outros'],
+    expense: ['Alimentação', 'Transporte', 'Saúde', 'Educação', 'Lazer', 'Casa', 'Devedor', 'Outros'],
     income: ['Salário', 'Freelance', 'Investimentos', 'Vendas', 'Outros']
   };
 

@@ -18,6 +18,7 @@ export const TRANSACTION_CATEGORIES = {
     'Educação',
     'Lazer',
     'Casa',
+    'Devedor',
     'Outros'
   ]
 };
