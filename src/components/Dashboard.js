@@ -19,6 +19,7 @@ import {
   Plus
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { fetchData } from '../lib/database-setup';
 import { format, subDays, startOfMonth, endOfMonth } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 

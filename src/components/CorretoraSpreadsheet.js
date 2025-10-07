@@ -25,9 +25,11 @@ import {
   Thermometer,
   Flame,
   Snowflake,
-  AlertCircle
+  AlertCircle,
+  Database
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { fetchData, insertData, updateData, deleteData, setupDatabase } from '../lib/database-setup';
 import { format, addDays, startOfWeek, endOfWeek } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import toast from 'react-hot-toast';
@@ -592,6 +594,19 @@ const CorretoraSpreadsheet = () => {
           >
             <Plus size={16} />
             Novo Lead
+          </ActionButton>
+          <ActionButton
+            onClick={async () => {
+              await setupDatabase();
+              fetchData();
+              toast.success('Banco de dados inicializado!');
+            }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            style={{ background: '#10b981', border: '1px solid #10b981' }}
+          >
+            <Database size={16} />
+            Inicializar BD
           </ActionButton>
           <ActionButton>
             <Download size={16} />

@@ -5,6 +5,7 @@ import { X, DollarSign, User, Package, Calendar, CheckCircle } from 'lucide-reac
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import toast from 'react-hot-toast';
+import { insertData } from '../lib/database-setup';
 
 const FormContainer = styled(motion.div)`
   position: fixed;
@@ -215,8 +216,13 @@ const CommissionForm = ({ isOpen, onClose, onCommissionAdded }) => {
     e.preventDefault();
     
     try {
-      // Aqui você faria a chamada para a API
-      console.log('Nova comissão:', formData);
+      const dataToInsert = {
+        ...formData,
+        valor: parseFloat(formData.valor),
+        comissao: parseFloat(formData.comissao)
+      };
+      
+      await insertData('comissoes', dataToInsert);
       
       toast.success('Comissão criada com sucesso!');
       onCommissionAdded();

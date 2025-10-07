@@ -5,6 +5,7 @@ import { X, Calendar, Clock, User, FileText } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import toast from 'react-hot-toast';
+import { insertData } from '../lib/database-setup';
 
 const FormContainer = styled(motion.div)`
   position: fixed;
@@ -205,8 +206,7 @@ const AppointmentForm = ({ isOpen, onClose, onAppointmentAdded }) => {
     e.preventDefault();
     
     try {
-      // Aqui você faria a chamada para a API
-      console.log('Novo agendamento:', formData);
+      await insertData('agendamentos', formData);
       
       toast.success('Agendamento criado com sucesso!');
       onAppointmentAdded();
