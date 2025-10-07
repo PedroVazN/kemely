@@ -80,8 +80,8 @@ const Logo = styled.div`
   }
 
   &:hover {
-    color: #3b82f6;
-    text-shadow: 0 2px 10px rgba(59, 130, 246, 0.5);
+    color: #ffffff;
+    text-shadow: 0 2px 10px rgba(255, 255, 255, 0.5);
   }
 `;
 
@@ -188,16 +188,16 @@ const ActionButton = styled(motion.button)`
   gap: 6px;
   padding: 8px 16px;
   background: ${props => props.variant === 'primary' ? 
-    'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)' : 
+    'linear-gradient(135deg, #ffffff 0%, #e5e7eb 100%)' : 
     'transparent'
   };
   color: ${props => props.variant === 'primary' ? 
-    '#ffffff !important' : 
-    '#3b82f6'
+    '#1a1a1a !important' : 
+    '#ffffff'
   } !important;
   border: 1px solid ${props => props.variant === 'primary' ? 
     'transparent' : 
-    '#3b82f6'
+    '#ffffff'
   };
   border-radius: 6px;
   font-weight: 600;
@@ -205,7 +205,7 @@ const ActionButton = styled(motion.button)`
   cursor: pointer;
   transition: all 0.2s ease;
   box-shadow: ${props => props.variant === 'primary' ? 
-    '0 4px 16px rgba(59, 130, 246, 0.3)' : 
+    '0 4px 16px rgba(255, 255, 255, 0.3)' : 
     'none'
   };
   white-space: nowrap;
@@ -234,14 +234,14 @@ const ActionButton = styled(motion.button)`
 
   &:hover {
     background: ${props => props.variant === 'primary' ? 
-      'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)' : 
-      '#3b82f6'
+      'linear-gradient(135deg, #f3f4f6 0%, #d1d5db 100%)' : 
+      '#ffffff'
     };
-    color: #ffffff !important;
+    color: #1a1a1a !important;
     transform: translateY(-2px);
     box-shadow: ${props => props.variant === 'primary' ? 
-      '0 8px 32px rgba(59, 130, 246, 0.4)' : 
-      '0 4px 16px rgba(59, 130, 246, 0.3)'
+      '0 8px 32px rgba(255, 255, 255, 0.4)' : 
+      '0 4px 16px rgba(255, 255, 255, 0.3)'
     };
   }
 `;

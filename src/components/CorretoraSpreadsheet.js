@@ -46,7 +46,7 @@ const CorretoraContainer = styled.div`
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.6),
     0 0 0 1px rgba(59, 130, 246, 0.1);
-  border: 1px solid #404040;
+  border: 1px solid #ffffff;
   margin-bottom: 32px;
   position: relative;
   overflow: hidden;
@@ -71,7 +71,7 @@ const CorretoraContainer = styled.div`
     left: 0;
     right: 0;
     height: 2px;
-    background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+    background: linear-gradient(90deg, transparent, #ffffff, transparent);
     border-radius: 20px 20px 0 0;
   }
 `;
@@ -82,7 +82,7 @@ const Header = styled.div`
   align-items: center;
   margin-bottom: 32px;
   padding-bottom: 20px;
-  border-bottom: 2px solid #404040;
+  border-bottom: 2px solid #ffffff;
 `;
 
 const HeaderLeft = styled.div`
@@ -95,7 +95,7 @@ const HeaderIcon = styled.div`
   width: 56px;
   height: 56px;
   border-radius: 16px;
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #e5e7eb 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -128,16 +128,16 @@ const ActionButton = styled(motion.button)`
   gap: 8px;
   padding: 12px 20px;
   background: ${props => props.variant === 'primary' ? 
-    '#3b82f6' : 
+    '#ffffff' : 
     'transparent'
   };
   color: ${props => props.variant === 'primary' ? 
-    '#ffffff' : 
-    '#3b82f6'
+    '#1a1a1a' : 
+    '#ffffff'
   };
   border: 1px solid ${props => props.variant === 'primary' ? 
     'transparent' : 
-    '#3b82f6'
+    '#ffffff'
   };
   border-radius: 12px;
   font-weight: 600;
@@ -151,13 +151,13 @@ const ActionButton = styled(motion.button)`
   &:hover {
     transform: translateY(-2px);
     background: ${props => props.variant === 'primary' ? 
-      '#2563eb' : 
-      '#3b82f6'
+      '#f3f4f6' : 
+      '#ffffff'
     };
-    color: #ffffff;
+    color: #1a1a1a;
     box-shadow: ${props => props.variant === 'primary' ? 
-      '0 8px 25px rgba(59, 130, 246, 0.4)' : 
-      '0 4px 14px 0 rgba(59, 130, 246, 0.3)'
+      '0 8px 25px rgba(255, 255, 255, 0.4)' : 
+      '0 4px 14px 0 rgba(255, 255, 255, 0.3)'
     };
   }
 `;
@@ -171,7 +171,7 @@ const StatsGrid = styled.div`
 
 const StatCard = styled(motion.div)`
   background: #1a1a1a;
-  border: 1px solid #404040;
+  border: 1px solid #ffffff;
   border-radius: 16px;
   padding: 20px;
   position: relative;
@@ -211,7 +211,7 @@ const StatIcon = styled.div`
   width: 32px;
   height: 32px;
   border-radius: 8px;
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #e5e7eb 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -236,7 +236,7 @@ const TabsContainer = styled.div`
   display: flex;
   gap: 8px;
   margin-bottom: 24px;
-  border-bottom: 2px solid #404040;
+  border-bottom: 2px solid #ffffff;
 `;
 
 const Tab = styled(motion.button)`
@@ -283,13 +283,13 @@ const TableContainer = styled.div`
   background: #2a2a2a;
   border-radius: 16px;
   overflow: hidden;
-  border: 2px solid #3b82f6;
+  border: 2px solid #ffffff;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 `;
 
 const TableHeader = styled.div`
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  color: white;
+  background: linear-gradient(135deg, #ffffff 0%, #e5e7eb 100%);
+  color: #1a1a1a;
   padding: 20px 24px;
   display: grid;
   grid-template-columns: ${props => props.columns};
@@ -305,14 +305,14 @@ const TableRow = styled(motion.div)`
   grid-template-columns: ${props => props.columns};
   gap: 16px;
   padding: 16px 24px;
-  border-bottom: 1px solid #3b82f6;
+  border-bottom: 1px solid #ffffff;
   align-items: center;
   transition: all 0.3s ease;
   background: #2a2a2a;
 
   &:hover {
-    background: rgba(59, 130, 246, 0.1);
-    border-left: 3px solid #3b82f6;
+    background: rgba(255, 255, 255, 0.1);
+    border-left: 3px solid #ffffff;
   }
 
   &:nth-child(even) {
@@ -356,10 +356,10 @@ const StatusBadge = styled.span`
   color: ${props => {
     switch(props.status) {
       case 'aprovado': return '#10b981';
-      case 'pendente': return '#3b82f6';
+      case 'pendente': return '#ffffff';
       case 'rejeitado': return '#ef4444';
       case 'quente': return '#ef4444';
-      case 'frio': return '#3b82f6';
+      case 'frio': return '#ffffff';
       default: return '#6b7280';
     }
   }};
@@ -389,7 +389,7 @@ const ActionButtons = styled.div`
 
 const ActionBtn = styled.button`
   padding: 6px 12px;
-  border: 1px solid #3b82f6;
+  border: 1px solid #ffffff;
   border-radius: 8px;
   background: #1a1a1a;
   color: #ffffff;
@@ -402,11 +402,11 @@ const ActionBtn = styled.button`
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 
   &:hover {
-    background: #3b82f6;
-    border-color: #60a5fa;
-    color: #ffffff;
+    background: #ffffff;
+    border-color: #f3f4f6;
+    color: #1a1a1a;
     transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
+    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.4);
   }
 `;
 
@@ -894,7 +894,7 @@ const CorretoraSpreadsheet = () => {
                 <TableCell bold>{commission.cliente}</TableCell>
                 <TableCell>{commission.produto}</TableCell>
                 <TableCell>R$ {parseFloat(commission.valor).toFixed(2)}</TableCell>
-                <TableCell bold style={{ color: '#3b82f6' }}>R$ {parseFloat(commission.comissao).toFixed(2)}</TableCell>
+                <TableCell bold style={{ color: '#ffffff' }}>R$ {parseFloat(commission.comissao).toFixed(2)}</TableCell>
                 <TableCell>{format(new Date(commission.data_venda), 'dd/MM/yyyy', { locale: ptBR })}</TableCell>
                 <TableCell>
                   <StatusBadge status={commission.status}>

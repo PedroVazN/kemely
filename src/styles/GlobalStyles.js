@@ -33,12 +33,12 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   ::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #e5e7eb 100%);
     border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    background: linear-gradient(135deg, #f3f4f6 0%, #d1d5db 100%);
   }
 
   /* Animações globais */
@@ -151,8 +151,8 @@ export const Card = styled.div`
   padding: 32px;
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(59, 130, 246, 0.3);
-  border: 2px solid #3b82f6;
+    0 0 0 1px rgba(255, 255, 255, 0.3);
+  border: 2px solid #ffffff;
   margin-bottom: 32px;
   position: relative;
   overflow: hidden;
@@ -162,8 +162,8 @@ export const Card = styled.div`
     transform: translateY(-4px);
     box-shadow: 
       0 20px 40px rgba(0, 0, 0, 0.8),
-      0 0 0 1px rgba(59, 130, 246, 0.5);
-    border-color: #60a5fa;
+      0 0 0 1px rgba(255, 255, 255, 0.5);
+    border-color: #f3f4f6;
   }
 
   &::before {
@@ -173,7 +173,7 @@ export const Card = styled.div`
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(90deg, #3b82f6, #1d4ed8, #3b82f6);
+    background: linear-gradient(90deg, #ffffff, #e5e7eb, #ffffff);
     background-size: 200% 100%;
     animation: shimmer 3s ease-in-out infinite;
   }
@@ -185,15 +185,15 @@ export const Card = styled.div`
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.02) 0%, rgba(29, 78, 216, 0.02) 100%);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, rgba(229, 231, 235, 0.02) 100%);
     pointer-events: none;
   }
 `;
 
 export const Button = styled.button`
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  color: white;
-  border: 1px solid #3b82f6;
+  background: linear-gradient(135deg, #ffffff 0%, #e5e7eb 100%);
+  color: #1a1a1a;
+  border: 1px solid #ffffff;
   padding: 16px 32px;
   border-radius: 16px;
   font-size: 14px;
@@ -201,7 +201,7 @@ export const Button = styled.button`
   cursor: pointer;
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   box-shadow: 
-    0 8px 32px rgba(59, 130, 246, 0.4),
+    0 8px 32px rgba(255, 255, 255, 0.4),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
   position: relative;
   overflow: hidden;
@@ -235,9 +235,9 @@ export const Button = styled.button`
   &:hover {
     transform: translateY(-3px) scale(1.02);
     box-shadow: 
-      0 20px 40px rgba(59, 130, 246, 0.6),
+      0 20px 40px rgba(255, 255, 255, 0.6),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
-    border-color: #60a5fa;
+    border-color: #f3f4f6;
 
     &::before {
       left: 100%;
@@ -257,7 +257,7 @@ export const Button = styled.button`
     opacity: 0.5;
     cursor: not-allowed;
     transform: none;
-    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
   }
 `;
 
@@ -275,9 +275,9 @@ export const Input = styled.input`
 
   &:focus {
     outline: none;
-    border-color: #3b82f6;
+    border-color: #ffffff;
     box-shadow: 
-      0 0 0 4px rgba(59, 130, 246, 0.2),
+      0 0 0 4px rgba(255, 255, 255, 0.2),
       0 8px 32px rgba(0, 0, 0, 0.4);
     transform: translateY(-2px);
     background: #2a2a2a;
@@ -312,9 +312,9 @@ export const Select = styled.select`
 
   &:focus {
     outline: none;
-    border-color: #3b82f6;
+    border-color: #ffffff;
     box-shadow: 
-      0 0 0 4px rgba(59, 130, 246, 0.2),
+      0 0 0 4px rgba(255, 255, 255, 0.2),
       0 8px 32px rgba(0, 0, 0, 0.4);
     transform: translateY(-2px);
     background: #2a2a2a;

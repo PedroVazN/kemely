@@ -29,7 +29,7 @@ const FormContent = styled.div`
   width: 100%;
   max-width: 500px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-  border: 2px solid #3b82f6;
+  border: 2px solid #ffffff;
   position: relative;
   max-height: 90vh;
   overflow-y: auto;
@@ -41,7 +41,7 @@ const FormHeader = styled.div`
   align-items: center;
   margin-bottom: 24px;
   padding-bottom: 16px;
-  border-bottom: 2px solid #3b82f6;
+  border-bottom: 2px solid #ffffff;
 `;
 
 const FormTitle = styled.h2`
@@ -56,7 +56,7 @@ const FormTitle = styled.h2`
 
 const CloseButton = styled.button`
   background: #1a1a1a;
-  border: 1px solid #3b82f6;
+  border: 1px solid #ffffff;
   color: #ffffff;
   width: 40px;
   height: 40px;
@@ -68,7 +68,8 @@ const CloseButton = styled.button`
   transition: all 0.2s ease;
 
   &:hover {
-    background: #3b82f6;
+    background: #ffffff;
+    color: #1a1a1a;
     transform: scale(1.05);
   }
 `;
@@ -97,8 +98,8 @@ const Input = styled.input`
 
   &:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
   }
 
   &::placeholder {
@@ -118,8 +119,8 @@ const Select = styled.select`
 
   &:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
   }
 `;
 
@@ -137,8 +138,8 @@ const TextArea = styled.textarea`
 
   &:focus {
     outline: none;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
   }
 
   &::placeholder {
@@ -163,14 +164,14 @@ const Button = styled(motion.button)`
   border: none;
 
   ${props => props.variant === 'primary' ? `
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-    color: #ffffff;
-    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
+    background: linear-gradient(135deg, #ffffff 0%, #e5e7eb 100%);
+    color: #1a1a1a;
+    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.3);
 
     &:hover {
-      background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+      background: linear-gradient(135deg, #f3f4f6 0%, #d1d5db 100%);
       transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(59, 130, 246, 0.4);
+      box-shadow: 0 8px 32px rgba(255, 255, 255, 0.4);
     }
   ` : `
     background: transparent;
