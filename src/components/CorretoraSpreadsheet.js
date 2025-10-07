@@ -32,6 +32,8 @@ import { format, addDays, startOfWeek, endOfWeek } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import toast from 'react-hot-toast';
 import LeadForm from './LeadForm';
+import AppointmentForm from './AppointmentForm';
+import CommissionForm from './CommissionForm';
 import EditLeadModal from './EditLeadModal';
 import DeleteConfirmModal from './DeleteConfirmModal';
 
@@ -413,6 +415,8 @@ const CorretoraSpreadsheet = () => {
   const [commissions, setCommissions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showLeadForm, setShowLeadForm] = useState(false);
+  const [showAppointmentForm, setShowAppointmentForm] = useState(false);
+  const [showCommissionForm, setShowCommissionForm] = useState(false);
   const [showEditLeadModal, setShowEditLeadModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [selectedLead, setSelectedLead] = useState(null);
@@ -469,8 +473,24 @@ const CorretoraSpreadsheet = () => {
     fetchData();
   };
 
+  const handleAppointmentAdded = () => {
+    fetchData();
+  };
+
+  const handleCommissionAdded = () => {
+    fetchData();
+  };
+
   const handleCloseLeadForm = () => {
     setShowLeadForm(false);
+  };
+
+  const handleCloseAppointmentForm = () => {
+    setShowAppointmentForm(false);
+  };
+
+  const handleCloseCommissionForm = () => {
+    setShowCommissionForm(false);
   };
 
   const handleEditLead = (lead) => {
@@ -684,6 +704,50 @@ const CorretoraSpreadsheet = () => {
         </Tab>
       </TabsContainer>
 
+      {/* Action Buttons for each tab */}
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'flex-end', 
+        marginBottom: '20px',
+        gap: '12px'
+      }}>
+        {activeTab === 'leads' && (
+          <ActionButton 
+            variant="primary"
+            onClick={handleAddLead}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Plus size={16} />
+            Novo Lead
+          </ActionButton>
+        )}
+        
+        {activeTab === 'appointments' && (
+          <ActionButton 
+            variant="primary"
+            onClick={() => setShowAppointmentForm(true)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Plus size={16} />
+            Novo Agendamento
+          </ActionButton>
+        )}
+        
+        {activeTab === 'commissions' && (
+          <ActionButton 
+            variant="primary"
+            onClick={() => setShowCommissionForm(true)}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Plus size={16} />
+            Nova Comissão
+          </ActionButton>
+        )}
+      </div>
+
       <TableContainer>
         {activeTab === 'leads' && (
           <>
@@ -847,6 +911,18 @@ const CorretoraSpreadsheet = () => {
         isOpen={showLeadForm}
         onClose={handleCloseLeadForm}
         onLeadAdded={handleLeadAdded}
+      />
+
+      <AppointmentForm
+        isOpen={showAppointmentForm}
+        onClose={handleCloseAppointmentForm}
+        onAppointmentAdded={handleAppointmentAdded}
+      />
+
+      <CommissionForm
+        isOpen={showCommissionForm}
+        onClose={handleCloseCommissionForm}
+        onCommissionAdded={handleCommissionAdded}
       />
 
       <EditLeadModal
