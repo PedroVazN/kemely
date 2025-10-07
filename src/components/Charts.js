@@ -36,7 +36,7 @@ const ChartHeader = styled.div`
   gap: 12px;
   margin-bottom: 20px;
   padding-bottom: 16px;
-  border-bottom: 1px solid #3b82f6;
+  border-bottom: 1px solid #ffffff;
 `;
 
 const ChartTitle = styled.h3`
@@ -48,7 +48,7 @@ const ChartTitle = styled.h3`
 `;
 
 const ChartIcon = styled.div`
-  color: #3b82f6;
+  color: #ffffff;
   display: flex;
   align-items: center;
 `;

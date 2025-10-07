@@ -20,7 +20,7 @@ const SummaryCard = styled.div`
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.6),
     0 0 0 1px rgba(59, 130, 246, 0.3);
-  border: 2px solid #3b82f6;
+  border: 2px solid #ffffff;
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   position: relative;
   overflow: hidden;
@@ -32,7 +32,7 @@ const SummaryCard = styled.div`
     left: 0;
     right: 0;
     height: 4px;
-    background: ${props => props.gradient || 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)'};
+    background: ${props => props.gradient || 'linear-gradient(135deg, #ffffff 0%, #e5e7eb 100%)'};
     border-radius: 20px 20px 0 0;
   }
 
@@ -61,7 +61,7 @@ const SummaryIcon = styled.div`
   margin-bottom: 16px;
   display: flex;
   justify-content: center;
-  color: #3b82f6;
+  color: #ffffff;
   animation: pulse 2s infinite;
 `;
 
@@ -96,7 +96,7 @@ const ChartContainer = styled.div`
   border-radius: 12px;
   padding: 20px;
   margin-top: 20px;
-  border: 1px solid #3b82f6;
+  border: 1px solid #ffffff;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 `;
 
@@ -181,7 +181,7 @@ const FinancialSummary = ({ onDataChange }) => {
           </SummarySubtitle>
         </SummaryCard>
 
-        <SummaryCard gradient="linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)">
+        <SummaryCard gradient="linear-gradient(135deg, #ffffff 0%, #e5e7eb 100%)">
           <SummaryIcon>
             <DollarSign size={48} />
           </SummaryIcon>

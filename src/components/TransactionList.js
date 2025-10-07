@@ -10,7 +10,7 @@ const ListContainer = styled.div`
   max-height: 400px;
   overflow-y: auto;
   border-radius: 8px;
-  border: 2px solid #3b82f6;
+  border: 2px solid #ffffff;
   background: #1a1a1a;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 `;
@@ -20,7 +20,7 @@ const TransactionItem = styled(motion.div)`
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  border-bottom: 1px solid #3b82f6;
+  border-bottom: 1px solid #ffffff;
   background: ${props => props.isIncome ? 
     'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(34, 197, 94, 0.1) 100%)' : 
     'linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%)'
@@ -80,7 +80,7 @@ const ActionButtons = styled.div`
 
 const ActionButton = styled.button`
   background: rgba(26, 26, 26, 0.8);
-  border: 1px solid #3b82f6;
+  border: 1px solid #ffffff;
   color: #ffffff;
   cursor: pointer;
   padding: 8px 12px;
@@ -89,9 +89,9 @@ const ActionButton = styled.button`
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 
   &:hover {
-    background: ${props => props.danger ? '#ef4444' : '#3b82f6'};
-    border-color: ${props => props.danger ? '#dc2626' : '#60a5fa'};
-    color: #ffffff;
+    background: ${props => props.danger ? '#ef4444' : '#ffffff'};
+    border-color: ${props => props.danger ? '#dc2626' : '#f3f4f6'};
+    color: ${props => props.danger ? '#ffffff' : '#1a1a1a'};
     transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
   }

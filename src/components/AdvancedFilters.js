@@ -25,7 +25,7 @@ const SearchIcon = styled.div`
   left: 16px;
   top: 50%;
   transform: translateY(-50%);
-  color: #3b82f6;
+  color: #ffffff;
   z-index: 1;
 `;
 
@@ -36,7 +36,7 @@ const FilterActions = styled.div`
   flex-wrap: wrap;
   margin-top: 16px;
   padding-top: 16px;
-  border-top: 1px solid #3b82f6;
+  border-top: 1px solid #ffffff;
 `;
 
 const ActiveFilters = styled.div`

@@ -28,7 +28,7 @@ const SpreadsheetContainer = styled.div`
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.6),
     0 0 0 1px rgba(59, 130, 246, 0.3);
-  border: 2px solid #3b82f6;
+  border: 2px solid #ffffff;
   margin-bottom: 32px;
   position: relative;
   overflow: hidden;
@@ -41,7 +41,7 @@ const SpreadsheetContainer = styled.div`
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #e5e7eb 100%);
     border-radius: 20px 20px 0 0;
   }
 `;
@@ -52,7 +52,7 @@ const SpreadsheetHeader = styled.div`
   align-items: center;
   margin-bottom: 32px;
   padding-bottom: 20px;
-  border-bottom: 2px solid #3b82f6;
+  border-bottom: 2px solid #ffffff;
 `;
 
 const HeaderLeft = styled.div`
@@ -98,16 +98,16 @@ const ActionButton = styled(motion.button)`
   gap: 8px;
   padding: 12px 20px;
   background: ${props => props.variant === 'primary' ? 
-    'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)' : 
+    'linear-gradient(135deg, #ffffff 0%, #e5e7eb 100%)' : 
     'rgba(26, 26, 26, 0.8)'
   };
   color: ${props => props.variant === 'primary' ? 
-    '#ffffff' : 
-    '#3b82f6'
+    '#1a1a1a' : 
+    '#ffffff'
   };
   border: 2px solid ${props => props.variant === 'primary' ? 
     'transparent' : 
-    '#3b82f6'
+    '#ffffff'
   };
   border-radius: 12px;
   font-weight: 600;
@@ -119,10 +119,10 @@ const ActionButton = styled(motion.button)`
     transform: translateY(-2px);
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8);
     background: ${props => props.variant === 'primary' ? 
-      'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)' : 
-      'rgba(59, 130, 246, 0.2)'
+      'linear-gradient(135deg, #f3f4f6 0%, #d1d5db 100%)' : 
+      'rgba(255, 255, 255, 0.2)'
     };
-    border-color: #60a5fa;
+    border-color: #f3f4f6;
   }
 `;
 
@@ -135,7 +135,7 @@ const SummaryGrid = styled.div`
 
 const SummaryCard = styled(motion.div)`
   background: #1a1a1a;
-  border: 2px solid #3b82f6;
+  border: 2px solid #ffffff;
   border-radius: 16px;
   padding: 24px;
   position: relative;
@@ -143,7 +143,7 @@ const SummaryCard = styled(motion.div)`
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 
   &:hover {
-    border-color: #60a5fa;
+    border-color: #f3f4f6;
     transform: translateY(-2px);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
   }
@@ -184,7 +184,7 @@ const CardIcon = styled.div`
     '#10b981' : 
     props.variant === 'expense' ? 
     '#ef4444' : 
-    '#3b82f6'
+    '#ffffff'
   };
 `;
 
@@ -221,13 +221,13 @@ const TransactionsTable = styled.div`
   background: #1a1a1a;
   border-radius: 16px;
   overflow: hidden;
-  border: 2px solid #3b82f6;
+  border: 2px solid #ffffff;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 `;
 
 const TableHeader = styled.div`
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-  color: white;
+  background: linear-gradient(135deg, #ffffff 0%, #e5e7eb 100%);
+  color: #1a1a1a;
   padding: 20px 24px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -249,8 +249,8 @@ const TableRow = styled(motion.div)`
   background: #1a1a1a;
 
   &:hover {
-    background: rgba(59, 130, 246, 0.1);
-    border-left: 3px solid #3b82f6;
+    background: rgba(255, 255, 255, 0.1);
+    border-left: 3px solid #ffffff;
   }
 
   &:nth-child(even) {
@@ -277,7 +277,7 @@ const LoadingSpinner = styled.div`
   height: 24px;
   border: 3px solid rgba(59, 130, 246, 0.3);
   border-radius: 50%;
-  border-top-color: #3b82f6;
+  border-top-color: #ffffff;
   animation: spin 1s ease-in-out infinite;
 `;
 

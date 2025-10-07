@@ -87,7 +87,7 @@ const MainCard = styled(motion.div)`
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #e5e7eb 100%);
     border-radius: 20px 20px 0 0;
   }
 
@@ -119,12 +119,12 @@ const CardIcon = styled.div`
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #e5e7eb 100%);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.3);
+  color: #1a1a1a;
+  box-shadow: 0 4px 14px 0 rgba(255, 255, 255, 0.3);
 `;
 
 const MainValue = styled.div`
@@ -232,7 +232,7 @@ const LoadingSpinner = styled.div`
   height: 20px;
   border: 3px solid rgba(59, 130, 246, 0.3);
   border-radius: 50%;
-  border-top-color: #3b82f6;
+  border-top-color: #ffffff;
   animation: spin 1s ease-in-out infinite;
 `;
 

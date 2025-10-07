@@ -37,7 +37,7 @@ const FormContainer = styled(motion.div)`
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
-  border: 2px solid #3b82f6;
+  border: 2px solid #ffffff;
   position: relative;
 `;
 
@@ -47,7 +47,7 @@ const FormHeader = styled.div`
   align-items: center;
   margin-bottom: 24px;
   padding-bottom: 16px;
-  border-bottom: 2px solid #3b82f6;
+  border-bottom: 2px solid #ffffff;
 `;
 
 const FormTitle = styled.h2`
@@ -65,7 +65,7 @@ const CloseButton = styled.button`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 1px solid #3b82f6;
+  border: 1px solid #ffffff;
   background: #1a1a1a;
   color: #ffffff;
   cursor: pointer;
@@ -76,9 +76,9 @@ const CloseButton = styled.button`
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 
   &:hover {
-    background: #3b82f6;
-    border-color: #60a5fa;
-    color: #ffffff;
+    background: #ffffff;
+    border-color: #f3f4f6;
+    color: #1a1a1a;
     transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(59, 130, 246, 0.4);
   }
