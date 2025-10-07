@@ -354,6 +354,8 @@ const StatusBadge = styled.span`
       case 'rejeitado': return 'rgba(239, 68, 68, 0.1)';
       case 'quente': return 'rgba(239, 68, 68, 0.1)';
       case 'frio': return 'rgba(59, 130, 246, 0.1)';
+      case 'confirmado': return 'rgba(16, 185, 129, 0.1)';
+      case 'agendado': return 'rgba(245, 158, 11, 0.1)';
       default: return 'rgba(107, 114, 128, 0.1)';
     }
   }};
@@ -364,6 +366,8 @@ const StatusBadge = styled.span`
       case 'rejeitado': return '#ef4444';
       case 'quente': return '#ef4444';
       case 'frio': return '#ffffff';
+      case 'confirmado': return '#10b981';
+      case 'agendado': return '#f59e0b';
       default: return '#6b7280';
     }
   }};
@@ -374,6 +378,8 @@ const StatusBadge = styled.span`
       case 'rejeitado': return 'rgba(239, 68, 68, 0.2)';
       case 'quente': return 'rgba(239, 68, 68, 0.2)';
       case 'frio': return 'rgba(59, 130, 246, 0.2)';
+      case 'confirmado': return 'rgba(16, 185, 129, 0.2)';
+      case 'agendado': return 'rgba(245, 158, 11, 0.2)';
       default: return 'rgba(107, 114, 128, 0.2)';
     }
   }};
