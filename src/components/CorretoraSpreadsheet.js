@@ -514,6 +514,26 @@ const CorretoraSpreadsheet = () => {
     setShowDeleteModal(true);
   };
 
+  const handleApproveLead = async (lead) => {
+    try {
+      await updateData('leads', lead.id, { status: 'aprovado' });
+      toast.success('Lead aprovado com sucesso!');
+      fetchData();
+    } catch (error) {
+      toast.error('Erro ao aprovar lead: ' + error.message);
+    }
+  };
+
+  const handleRejectLead = async (lead) => {
+    try {
+      await updateData('leads', lead.id, { status: 'rejeitado' });
+      toast.success('Lead rejeitado com sucesso!');
+      fetchData();
+    } catch (error) {
+      toast.error('Erro ao rejeitar lead: ' + error.message);
+    }
+  };
+
   const handleCloseDeleteModal = () => {
     setShowDeleteModal(false);
     setSelectedLead(null);
@@ -810,6 +830,24 @@ const CorretoraSpreadsheet = () => {
                 </TableCell>
                 <TableCell>
                   <ActionButtons>
+                    {lead.status === 'pendente' && (
+                      <>
+                        <ActionBtn 
+                          onClick={() => handleApproveLead(lead)}
+                          style={{ background: 'rgba(16, 185, 129, 0.2)', borderColor: '#10b981' }}
+                          title="Aprovar Lead"
+                        >
+                          <UserCheck size={12} />
+                        </ActionBtn>
+                        <ActionBtn 
+                          onClick={() => handleRejectLead(lead)}
+                          style={{ background: 'rgba(239, 68, 68, 0.2)', borderColor: '#ef4444' }}
+                          title="Rejeitar Lead"
+                        >
+                          <UserX size={12} />
+                        </ActionBtn>
+                      </>
+                    )}
                     <ActionBtn onClick={() => handleEditLead(lead)}>
                       <Edit size={12} />
                     </ActionBtn>

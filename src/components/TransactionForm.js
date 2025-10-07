@@ -55,6 +55,10 @@ const TransactionForm = ({ onTransactionAdded }) => {
     income: ['Salário', 'Freelance', 'Investimentos', 'Vendas', 'Outros']
   };
 
+  console.log('Categories:', categories);
+  console.log('Current type:', formData.type);
+  console.log('Available categories for current type:', categories[formData.type]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
