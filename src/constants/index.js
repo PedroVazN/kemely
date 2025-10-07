@@ -1,6 +1,7 @@
 export const TRANSACTION_TYPES = {
   INCOME: 'income',
-  EXPENSE: 'expense'
+  EXPENSE: 'expense',
+  DEBTOR: 'debtor'
 };
 
 export const TRANSACTION_CATEGORIES = {
@@ -9,7 +10,6 @@ export const TRANSACTION_CATEGORIES = {
     'Freelance',
     'Investimentos',
     'Vendas',
-    'Devedor',
     'Outros'
   ],
   [TRANSACTION_TYPES.EXPENSE]: [
@@ -19,7 +19,13 @@ export const TRANSACTION_CATEGORIES = {
     'Educação',
     'Lazer',
     'Casa',
-    'Devedor',
+    'Outros'
+  ],
+  [TRANSACTION_TYPES.DEBTOR]: [
+    'Empréstimo Pessoal',
+    'Empréstimo Comercial',
+    'Pagamento Pendente',
+    'Cobrança',
     'Outros'
   ]
 };

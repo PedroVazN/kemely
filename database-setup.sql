@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS transactions (
   id BIGSERIAL PRIMARY KEY,
   description TEXT NOT NULL,
   amount DECIMAL(10,2) NOT NULL,
-  type TEXT NOT NULL CHECK (type IN ('income', 'expense')),
+  type TEXT NOT NULL CHECK (type IN ('income', 'expense', 'debtor')),
   category TEXT NOT NULL,
   date DATE NOT NULL,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),

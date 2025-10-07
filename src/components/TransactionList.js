@@ -224,6 +224,7 @@ const TransactionList = ({ onTransactionDeleted, filters = {} }) => {
     if (filter === 'all') return true;
     if (filter === 'income') return transaction.type === 'income';
     if (filter === 'expense') return transaction.type === 'expense';
+    if (filter === 'debtor') return transaction.type === 'debtor';
     return true;
   });
 
@@ -251,6 +252,12 @@ const TransactionList = ({ onTransactionDeleted, filters = {} }) => {
           onClick={() => setFilter('expense')}
         >
           Despesas
+        </FilterButton>
+        <FilterButton 
+          active={filter === 'debtor'} 
+          onClick={() => setFilter('debtor')}
+        >
+          Devedores
         </FilterButton>
       </FilterContainer>
 

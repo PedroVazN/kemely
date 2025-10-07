@@ -85,8 +85,9 @@ const AdvancedFilters = ({ onFiltersChange, onClearFilters }) => {
   });
 
   const categories = {
-    expense: ['Alimentação', 'Transporte', 'Saúde', 'Educação', 'Lazer', 'Casa', 'Devedor', 'Outros'],
-    income: ['Salário', 'Freelance', 'Investimentos', 'Vendas', 'Devedor', 'Outros']
+    expense: ['Alimentação', 'Transporte', 'Saúde', 'Educação', 'Lazer', 'Casa', 'Outros'],
+    income: ['Salário', 'Freelance', 'Investimentos', 'Vendas', 'Outros'],
+    debtor: ['Empréstimo Pessoal', 'Empréstimo Comercial', 'Pagamento Pendente', 'Cobrança', 'Outros']
   };
 
   const handleFilterChange = (key, value) => {
@@ -116,7 +117,7 @@ const AdvancedFilters = ({ onFiltersChange, onClearFilters }) => {
   const getActiveFilters = () => {
     const active = [];
     if (filters.search) active.push(`Busca: "${filters.search}"`);
-    if (filters.type) active.push(`Tipo: ${filters.type === 'income' ? 'Receita' : 'Despesa'}`);
+    if (filters.type) active.push(`Tipo: ${filters.type === 'income' ? 'Receita' : filters.type === 'expense' ? 'Despesa' : 'Devedor'}`);
     if (filters.category) active.push(`Categoria: ${filters.category}`);
     if (filters.dateFrom) active.push(`De: ${filters.dateFrom}`);
     if (filters.dateTo) active.push(`Até: ${filters.dateTo}`);
@@ -171,6 +172,7 @@ const AdvancedFilters = ({ onFiltersChange, onClearFilters }) => {
             <option value="">Todos os tipos</option>
             <option value="income">Receitas</option>
             <option value="expense">Despesas</option>
+            <option value="debtor">Devedores</option>
           </select>
         </div>
 
@@ -200,7 +202,11 @@ const AdvancedFilters = ({ onFiltersChange, onClearFilters }) => {
               categories.expense.map(cat => (
                 <option key={cat} value={cat}>{cat}</option>
               )) :
-              [...categories.income, ...categories.expense].map(cat => (
+              filters.type === 'debtor' ?
+              categories.debtor.map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              )) :
+              [...categories.income, ...categories.expense, ...categories.debtor].map(cat => (
                 <option key={cat} value={cat}>{cat}</option>
               ))
             }

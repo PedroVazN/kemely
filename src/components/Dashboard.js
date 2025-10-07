@@ -8,6 +8,7 @@ import {
   Calendar,
   ArrowUpRight,
   ArrowDownRight,
+  Users,
   Activity,
   Target,
   FileSpreadsheet,
@@ -240,9 +241,11 @@ const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState({
     monthlyIncome: 0,
     monthlyExpense: 0,
+    monthlyDebtor: 0,
     monthlyBalance: 0,
     weeklyIncome: 0,
     weeklyExpense: 0,
+    weeklyDebtor: 0,
     recentTransactions: []
   });
   const [loading, setLoading] = useState(true);
@@ -276,6 +279,10 @@ const Dashboard = () => {
         .filter(t => t.type === 'expense')
         .reduce((sum, t) => sum + t.amount, 0);
 
+      const monthlyDebtor = data
+        .filter(t => t.type === 'debtor')
+        .reduce((sum, t) => sum + t.amount, 0);
+
       // Dados semanais
       const weeklyData = data.filter(t => 
         new Date(t.date) >= startOfWeek
@@ -289,15 +296,21 @@ const Dashboard = () => {
         .filter(t => t.type === 'expense')
         .reduce((sum, t) => sum + t.amount, 0);
 
+      const weeklyDebtor = weeklyData
+        .filter(t => t.type === 'debtor')
+        .reduce((sum, t) => sum + t.amount, 0);
+
       // Transações recentes
       const recentTransactions = data.slice(0, 5);
 
       setDashboardData({
         monthlyIncome,
         monthlyExpense,
+        monthlyDebtor,
         monthlyBalance: monthlyIncome - monthlyExpense,
         weeklyIncome,
         weeklyExpense,
+        weeklyDebtor,
         recentTransactions
       });
     } catch (error) {
@@ -409,6 +422,8 @@ const Dashboard = () => {
                     <TransactionIcon isIncome={transaction.type === 'income'}>
                       {transaction.type === 'income' ? (
                         <TrendingUp size={20} />
+                      ) : transaction.type === 'debtor' ? (
+                        <Users size={20} />
                       ) : (
                         <TrendingDown size={20} />
                       )}
@@ -423,7 +438,7 @@ const Dashboard = () => {
                     </TransactionDetails>
                   </TransactionInfo>
                   <TransactionAmount isIncome={transaction.type === 'income'}>
-                    {transaction.type === 'income' ? '+' : '-'}R$ {transaction.amount.toFixed(2)}
+                    {transaction.type === 'income' ? '+' : transaction.type === 'debtor' ? '👥' : '-'}R$ {transaction.amount.toFixed(2)}
                   </TransactionAmount>
                 </TransactionItem>
               ))

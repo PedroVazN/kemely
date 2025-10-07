@@ -51,8 +51,9 @@ const TransactionForm = ({ onTransactionAdded }) => {
   const [message, setMessage] = useState('');
 
   const categories = {
-    expense: ['Alimentação', 'Transporte', 'Saúde', 'Educação', 'Lazer', 'Casa', 'Devedor', 'Outros'],
-    income: ['Salário', 'Freelance', 'Investimentos', 'Vendas', 'Devedor', 'Outros']
+    expense: ['Alimentação', 'Transporte', 'Saúde', 'Educação', 'Lazer', 'Casa', 'Outros'],
+    income: ['Salário', 'Freelance', 'Investimentos', 'Vendas', 'Outros'],
+    debtor: ['Empréstimo Pessoal', 'Empréstimo Comercial', 'Pagamento Pendente', 'Cobrança', 'Outros']
   };
 
   const handleChange = (e) => {
@@ -149,6 +150,7 @@ const TransactionForm = ({ onTransactionAdded }) => {
           >
             <option value="expense">Despesa</option>
             <option value="income">Receita</option>
+            <option value="debtor">Devedor</option>
           </Select>
         </div>
 
@@ -161,7 +163,7 @@ const TransactionForm = ({ onTransactionAdded }) => {
             required
           >
             <option value="">Selecione uma categoria</option>
-            {categories[formData.type].map(cat => (
+            {categories[formData.type] && categories[formData.type].map(cat => (
               <option key={cat} value={cat}>{cat}</option>
             ))}
           </Select>

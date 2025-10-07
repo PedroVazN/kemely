@@ -99,8 +99,8 @@ const HeaderIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+  color: #1a1a1a;
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.3);
 `;
 
 const HeaderTitle = styled.h2`
@@ -215,8 +215,8 @@ const StatIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+  color: #1a1a1a;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.3);
 `;
 
 const StatValue = styled.div`
@@ -331,6 +331,10 @@ const TableCell = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+
+  svg {
+    color: inherit;
+  }
 `;
 
 const StatusBadge = styled.span`
@@ -373,6 +377,10 @@ const StatusBadge = styled.span`
       default: return 'rgba(107, 114, 128, 0.2)';
     }
   }};
+
+  svg {
+    color: inherit;
+  }
 `;
 
 const TemperatureIcon = styled.div`
@@ -400,6 +408,10 @@ const ActionBtn = styled.button`
   gap: 4px;
   font-size: 0.75rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+  svg {
+    color: inherit;
+  }
 
   &:hover {
     background: #ffffff;
