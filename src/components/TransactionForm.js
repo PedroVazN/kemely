@@ -52,12 +52,8 @@ const TransactionForm = ({ onTransactionAdded }) => {
 
   const categories = {
     expense: ['Alimentação', 'Transporte', 'Saúde', 'Educação', 'Lazer', 'Casa', 'Devedor', 'Outros'],
-    income: ['Salário', 'Freelance', 'Investimentos', 'Vendas', 'Outros']
+    income: ['Salário', 'Freelance', 'Investimentos', 'Vendas', 'Devedor', 'Outros']
   };
-
-  console.log('Categories:', categories);
-  console.log('Current type:', formData.type);
-  console.log('Available categories for current type:', categories[formData.type]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

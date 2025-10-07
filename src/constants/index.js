@@ -9,6 +9,7 @@ export const TRANSACTION_CATEGORIES = {
     'Freelance',
     'Investimentos',
     'Vendas',
+    'Devedor',
     'Outros'
   ],
   [TRANSACTION_TYPES.EXPENSE]: [

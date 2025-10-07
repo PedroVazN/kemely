@@ -86,7 +86,7 @@ const AdvancedFilters = ({ onFiltersChange, onClearFilters }) => {
 
   const categories = {
     expense: ['Alimentação', 'Transporte', 'Saúde', 'Educação', 'Lazer', 'Casa', 'Devedor', 'Outros'],
-    income: ['Salário', 'Freelance', 'Investimentos', 'Vendas', 'Outros']
+    income: ['Salário', 'Freelance', 'Investimentos', 'Vendas', 'Devedor', 'Outros']
   };
 
   const handleFilterChange = (key, value) => {
