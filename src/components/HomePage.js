@@ -655,37 +655,12 @@ const HomePage = ({ onEnterApp }) => {
     return () => clearInterval(timer);
   }, []);
 
-  // Buscar frase motivacional
+  // Definir frase bíblica
   useEffect(() => {
-    const fetchQuote = async () => {
-      try {
-        const response = await fetch('https://api.quotable.io/random', {
-          method: 'GET',
-          headers: {
-            'Accept': 'application/json',
-          },
-        });
-        
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        setQuote({
-          text: data.content,
-          author: data.author
-        });
-      } catch (error) {
-        console.error('Erro ao buscar frase:', error);
-        // Usar frase padrão em caso de erro
-        setQuote({
-          text: "O sucesso é a soma de pequenos esforços repetidos dia após dia.",
-          author: "Robert Collier"
-        });
-      }
-    };
-
-    fetchQuote();
+    setQuote({
+      text: "Não se turbe o vosso coração; credes em Deus, crede também em mim.",
+      author: "João 14:1"
+    });
   }, []);
 
   const formatTime = (date) => {
@@ -738,7 +713,7 @@ const HomePage = ({ onEnterApp }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
           >
-             Kemely Corretora
+             Corretora Kemely Alves
           </Title>
           
           <Subtitle
