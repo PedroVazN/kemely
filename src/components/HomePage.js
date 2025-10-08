@@ -5,19 +5,47 @@ import {
   ArrowRight,
   Clock,
   Quote,
-  Sparkles
+  Sparkles,
+  Crown,
+  Gem,
+  Star,
+  Heart,
+  Shield,
+  Zap
 } from 'lucide-react';
 
-// Animações
+// Animações elegantes em preto e branco
 const float = keyframes`
   0%, 100% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-30px) rotate(180deg); }
+  50% { transform: translateY(-20px) rotate(5deg); }
 `;
-
 
 const pulse = keyframes`
   0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+`;
+
+const shimmer = keyframes`
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+`;
+
+const drift = keyframes`
+  0% { transform: translateX(0px) translateY(0px) rotate(0deg); }
+  25% { transform: translateX(50px) translateY(-30px) rotate(90deg); }
+  50% { transform: translateX(0px) translateY(-60px) rotate(180deg); }
+  75% { transform: translateX(-50px) translateY(-30px) rotate(270deg); }
+  100% { transform: translateX(0px) translateY(0px) rotate(360deg); }
+`;
+
+const wave = keyframes`
+  0%, 100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-20px) scale(1.1); }
+`;
+
+const glow = keyframes`
+  0%, 100% { box-shadow: 0 0 30px rgba(255, 255, 255, 0.1); }
+  50% { box-shadow: 0 0 50px rgba(255, 255, 255, 0.3), 0 0 80px rgba(255, 255, 255, 0.1); }
 `;
 
 const rotate = keyframes`
@@ -25,35 +53,15 @@ const rotate = keyframes`
   to { transform: rotate(360deg); }
 `;
 
-const drift = keyframes`
-  0% { transform: translateX(0px) translateY(0px) rotate(0deg); }
-  25% { transform: translateX(100px) translateY(-50px) rotate(90deg); }
-  50% { transform: translateX(0px) translateY(-100px) rotate(180deg); }
-  75% { transform: translateX(-100px) translateY(-50px) rotate(270deg); }
-  100% { transform: translateX(0px) translateY(0px) rotate(360deg); }
-`;
-
-const wave = keyframes`
-  0%, 100% { transform: translateY(0px) scale(1); }
-  50% { transform: translateY(-40px) scale(1.2); }
-`;
-
-const glow = keyframes`
-  0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.3); }
-  50% { box-shadow: 0 0 40px rgba(59, 130, 246, 0.6), 0 0 60px rgba(245, 158, 11, 0.3); }
-`;
-
 // Container principal
 const HomeContainer = styled.div`
   min-height: 100vh;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 25%, #2a2a2a 50%, #1a1a1a 75%, #0a0a0a 100%);
+  background: linear-gradient(135deg, #000000 0%, #111111 25%, #1a1a1a 50%, #111111 75%, #000000 100%);
   position: relative;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
   
   &::before {
     content: '';
@@ -63,15 +71,321 @@ const HomeContainer = styled.div`
     right: 0;
     bottom: 0;
     background: 
-      radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.08) 0%, transparent 50%),
-      radial-gradient(circle at 40% 60%, rgba(16, 185, 129, 0.06) 0%, transparent 50%);
+      radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+    animation: ${drift} 20s ease-in-out infinite;
+  }
+`;
+
+const MainContent = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  max-width: 1400px;
+  width: 100%;
+  padding: 40px;
+  position: relative;
+  z-index: 2;
+  
+  @media (max-width: 1024px) {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 20px;
+  }
+`;
+
+const LeftSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+`;
+
+const RightSection = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+`;
+
+const TimeDisplay = styled(motion.div)`
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 20px 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    animation: ${shimmer} 3s ease-in-out infinite;
+  }
+`;
+
+const TimeText = styled.div`
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  margin-bottom: 5px;
+  
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+`;
+
+const DateText = styled.div`
+  font-size: 1.1rem;
+  color: #cccccc;
+  font-weight: 500;
+`;
+
+const Title = styled(motion.h1)`
+  font-size: 4rem;
+  font-weight: 900;
+  color: #ffffff;
+  margin: 0 0 20px 0;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  background: linear-gradient(135deg, #ffffff 0%, #cccccc 50%, #ffffff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, #ffffff, transparent);
+    border-radius: 2px;
+  }
+  
+  @media (max-width: 1024px) {
+    font-size: 3rem;
+  }
+  
+  @media (max-width: 768px) {
+    font-size: 2.5rem;
+  }
+`;
+
+const Subtitle = styled(motion.p)`
+  font-size: 1.3rem;
+  color: #cccccc;
+  margin: 0 0 40px 0;
+  line-height: 1.6;
+  font-weight: 300;
+  
+  @media (max-width: 768px) {
+    font-size: 1.1rem;
+  }
+`;
+
+const CorretoraCard = styled(motion.div)`
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 25px;
+  padding: 40px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #ffffff, transparent);
+    border-radius: 25px 25px 0 0;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 0%, transparent 70%);
+    animation: ${rotate} 20s linear infinite;
     pointer-events: none;
   }
 `;
 
-// Efeitos de fundo
-const BackgroundEffects = styled.div`
+const CorretoraImage = styled.div`
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+  margin: 0 auto 30px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  animation: ${float} 6s ease-in-out infinite;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #000000 0%, #333333 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: #ffffff;
+  }
+  
+  &::after {
+    content: '👩‍💼';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 4rem;
+    z-index: 2;
+  }
+`;
+
+const CorretoraName = styled.h2`
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0 0 15px 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  animation: ${pulse} 4s ease-in-out infinite;
+`;
+
+const CorretoraTitle = styled.p`
+  font-size: 1.1rem;
+  color: #cccccc;
+  margin: 0 0 30px 0;
+  font-weight: 300;
+`;
+
+const QuoteSection = styled(motion.div)`
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 30px;
+  margin-top: 30px;
+  position: relative;
+  overflow: hidden;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #ffffff, transparent);
+  }
+`;
+
+const QuoteIcon = styled.div`
+  font-size: 3rem;
+  color: #ffffff;
+  margin-bottom: 20px;
+  opacity: 0.7;
+  animation: ${wave} 3s ease-in-out infinite;
+`;
+
+const QuoteText = styled.p`
+  font-size: 1.2rem;
+  color: #ffffff;
+  text-align: center;
+  line-height: 1.6;
+  margin: 0 0 15px 0;
+  font-style: italic;
+  font-weight: 300;
+`;
+
+const QuoteAuthor = styled.p`
+  font-size: 1rem;
+  color: #cccccc;
+  text-align: center;
+  margin: 0;
+  font-weight: 500;
+`;
+
+const EnterButton = styled(motion.button)`
+  background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+  color: #000000;
+  border: none;
+  border-radius: 50px;
+  padding: 18px 40px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  margin-top: 40px;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+  }
+  
+  &:hover::before {
+    left: 100%;
+  }
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  }
+  
+  @media (max-width: 768px) {
+    padding: 15px 30px;
+    font-size: 1.1rem;
+  }
+`;
+
+const FloatingElements = styled.div`
   position: absolute;
   top: 0;
   left: 0;
@@ -81,572 +395,28 @@ const BackgroundEffects = styled.div`
   z-index: 1;
 `;
 
-const FloatingShape = styled.div`
+const FloatingIcon = styled(motion.div)`
   position: absolute;
-  border-radius: 50%;
-  background: rgba(59, 130, 246, 0.05);
-  backdrop-filter: blur(30px);
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  animation: ${drift} 12s ease-in-out infinite;
-  box-shadow: 0 8px 32px rgba(59, 130, 246, 0.1);
-  
-  &:nth-child(1) {
-    width: 400px;
-    height: 400px;
-    top: 10%;
-    left: 5%;
-    animation: ${drift} 15s ease-in-out infinite;
-    animation-delay: 0s;
-    background: rgba(59, 130, 246, 0.08);
-    border-color: rgba(59, 130, 246, 0.3);
-    box-shadow: 0 0 60px rgba(59, 130, 246, 0.2);
-  }
-  
-  &:nth-child(2) {
-    width: 300px;
-    height: 300px;
-    top: 40%;
-    right: 5%;
-    animation: ${wave} 10s ease-in-out infinite;
-    animation-delay: 2s;
-    background: rgba(245, 158, 11, 0.06);
-    border-color: rgba(245, 158, 11, 0.2);
-    box-shadow: 0 0 50px rgba(245, 158, 11, 0.2);
-  }
-  
-  &:nth-child(3) {
-    width: 250px;
-    height: 250px;
-    bottom: 10%;
-    left: 10%;
-    animation: ${float} 8s ease-in-out infinite;
-    animation-delay: 4s;
-    background: rgba(16, 185, 129, 0.05);
-    border-color: rgba(16, 185, 129, 0.2);
-    box-shadow: 0 0 40px rgba(16, 185, 129, 0.2);
-  }
-  
-  &:nth-child(4) {
-    width: 180px;
-    height: 180px;
-    top: 20%;
-    right: 30%;
-    animation: ${pulse} 6s ease-in-out infinite;
-    animation-delay: 1s;
-    background: rgba(139, 69, 19, 0.04);
-    border-color: rgba(139, 69, 19, 0.2);
-    box-shadow: 0 0 30px rgba(139, 69, 19, 0.2);
-  }
-  
-  &:nth-child(5) {
-    width: 120px;
-    height: 120px;
-    bottom: 30%;
-    right: 20%;
-    animation: ${rotate} 20s linear infinite;
-    animation-delay: 3s;
-    background: rgba(239, 68, 68, 0.03);
-    border-color: rgba(239, 68, 68, 0.2);
-    box-shadow: 0 0 25px rgba(239, 68, 68, 0.2);
-  }
-`;
-
-const GradientOrb = styled.div`
-  position: absolute;
-  width: 400px;
-  height: 400px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, rgba(245, 158, 11, 0.05) 30%, transparent 70%);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  animation: ${pulse} 6s ease-in-out infinite;
-  box-shadow: 0 0 100px rgba(59, 130, 246, 0.1);
-`;
-
-// Conteúdo principal
-const MainContent = styled.div`
-  position: relative;
-  z-index: 2;
-  text-align: left;
-  max-width: 1200px;
-  width: 100%;
-  min-height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto 1fr auto;
-  gap: 30px;
-  padding: 40px;
-  align-items: start;
-  
-  @media (max-width: 1024px) {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto auto auto auto;
-    gap: 20px;
-    padding: 30px;
-  }
-  
-  @media (max-width: 768px) {
-    gap: 15px;
-    padding: 20px;
-  }
-  
-  @media (max-width: 480px) {
-    gap: 10px;
-    padding: 15px;
-  }
-`;
-
-const WelcomeSection = styled(motion.div)`
-  grid-column: 1 / -1;
-  grid-row: 1;
-  text-align: center;
-  margin-bottom: 0;
-`;
-
-const TimeDisplay = styled(motion.div)`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 20px;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.1rem;
-  font-weight: 500;
-  
-  @media (max-width: 768px) {
-    gap: 10px;
-    margin-bottom: 15px;
-    font-size: 1rem;
-  }
-`;
-
-const TimeText = styled.div`
-  font-size: 3.5rem;
-  font-weight: 900;
-  color: white;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
-  margin-bottom: 10px;
-  letter-spacing: 3px;
-  
-  @media (max-width: 1024px) {
-    font-size: 3rem;
-  }
-  
-  @media (max-width: 768px) {
-    font-size: 2.5rem;
-    letter-spacing: 2px;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 2rem;
-    letter-spacing: 1px;
-  }
-`;
-
-const DateText = styled.div`
-  font-size: 1.2rem;
-  font-weight: 500;
-  color: rgba(255, 255, 255, 0.8);
-  margin-bottom: 20px;
-  text-transform: capitalize;
-  
-  @media (max-width: 768px) {
-    font-size: 1rem;
-    margin-bottom: 15px;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 0.9rem;
-  }
-`;
-
-const Title = styled(motion.h1)`
-  font-size: 4rem;
-  font-weight: 900;
-  background: linear-gradient(135deg, #ffffff 0%, #3b82f6 50%, #f59e0b 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin: 0 0 15px 0;
-  text-shadow: 0 4px 20px rgba(59, 130, 246, 0.5);
-  letter-spacing: 2px;
-  animation: ${pulse} 4s ease-in-out infinite;
-  
-  @media (max-width: 1024px) {
-    font-size: 3.5rem;
-  }
-  
-  @media (max-width: 768px) {
-    font-size: 2.8rem;
-    letter-spacing: 1px;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 2.2rem;
-  }
-`;
-
-const Subtitle = styled(motion.p)`
-  font-size: 1.3rem;
-  color: rgba(255, 255, 255, 0.7);
-  margin: 0 0 15px 0;
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  
-  @media (max-width: 768px) {
-    font-size: 1.1rem;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 1rem;
-  }
-`;
-
-// Card da corretora
-const CorretoraCard = styled(motion.div)`
-  background: rgba(26, 26, 26, 0.9);
-  backdrop-filter: blur(30px);
-  border: 3px solid rgba(59, 130, 246, 0.4);
-  border-radius: 25px;
-  padding: 30px;
-  margin: 0;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
-  grid-column: 2;
-  grid-row: 2;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 400px;
-  
-  @media (max-width: 1024px) {
-    grid-column: 1;
-    grid-row: 2;
-    min-height: 350px;
-    padding: 25px;
-  }
-  
-  @media (max-width: 768px) {
-    min-height: 300px;
-    padding: 20px;
-  }
-  
-  @media (max-width: 480px) {
-    min-height: 250px;
-    padding: 15px;
-  }
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(245, 158, 11, 0.15) 100%);
-    opacity: 0.7;
-    transition: opacity 0.4s ease;
-    z-index: 1;
-  }
-  
-  &:hover {
-    transform: translateY(-8px) scale(1.02);
-    border-color: rgba(59, 130, 246, 0.8);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
-
-    &::before {
-      opacity: 1;
-    }
-  }
-`;
-
-const CorretoraImage = styled.div`
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  margin: 0 auto 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 
-    0 12px 35px rgba(0, 0, 0, 0.8),
-    0 0 0 3px rgba(59, 130, 246, 0.5),
-    inset 0 0 0 2px rgba(255, 255, 255, 0.1);
-  position: relative;
-  border: 3px solid rgba(59, 130, 246, 0.6);
-  overflow: hidden;
-  z-index: 2;
-  
-  @media (max-width: 1024px) {
-    width: 160px;
-    height: 160px;
-    margin: 0 auto 18px;
-  }
-  
-  @media (max-width: 768px) {
-    width: 140px;
-    height: 140px;
-    margin: 0 auto 15px;
-  }
-  
-  @media (max-width: 480px) {
-    width: 120px;
-    height: 120px;
-    margin: 0 auto 12px;
-  }
-  
-  &::after {
-    content: '';
-    position: absolute;
-    top: -3px;
-    left: -3px;
-    right: -3px;
-    bottom: -3px;
-    border-radius: 50%;
-    background: linear-gradient(45deg, rgba(59, 130, 246, 0.4), rgba(245, 158, 11, 0.3), rgba(16, 185, 129, 0.3));
-    z-index: -1;
-  }
-`;
-
-const CorretoraName = styled.h2`
+  color: rgba(255, 255, 255, 0.1);
   font-size: 2rem;
-  font-weight: 800;
-  color: white;
-  margin: 0 0 12px 0;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
-  letter-spacing: 1px;
-  position: relative;
-  z-index: 2;
+  animation: ${drift} 15s ease-in-out infinite;
   
-  @media (max-width: 1024px) {
-    font-size: 1.8rem;
-  }
-  
-  @media (max-width: 768px) {
-    font-size: 1.6rem;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 1.4rem;
-  }
+  &:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; }
+  &:nth-child(2) { top: 20%; right: 15%; animation-delay: 2s; }
+  &:nth-child(3) { bottom: 30%; left: 20%; animation-delay: 4s; }
+  &:nth-child(4) { bottom: 20%; right: 10%; animation-delay: 6s; }
+  &:nth-child(5) { top: 50%; left: 5%; animation-delay: 8s; }
+  &:nth-child(6) { top: 60%; right: 5%; animation-delay: 10s; }
 `;
 
-const CorretoraTitle = styled.p`
-  font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.8);
-  position: relative;
-  z-index: 2;
-  margin: 0 0 8px 0;
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  
-  @media (max-width: 768px) {
-    font-size: 1rem;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 0.9rem;
-  }
-`;
-
-// Frase motivacional
-const QuoteSection = styled(motion.div)`
-  background: rgba(26, 26, 26, 0.9);
-  backdrop-filter: blur(30px);
-  border: 3px solid rgba(245, 158, 11, 0.4);
-  border-radius: 25px;
-  padding: 30px;
-  margin: 0;
-  position: relative;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
-  grid-column: 1;
-  grid-row: 2;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 400px;
-  
-  @media (max-width: 1024px) {
-    grid-column: 1;
-    grid-row: 3;
-    min-height: 350px;
-    padding: 25px;
-  }
-  
-  @media (max-width: 768px) {
-    min-height: 300px;
-    padding: 20px;
-  }
-  
-  @media (max-width: 480px) {
-    min-height: 250px;
-    padding: 15px;
-  }
-  
-  &:hover {
-    transform: translateY(-8px) scale(1.02);
-    border-color: rgba(245, 158, 11, 0.8);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
-  }
-`;
-
-const QuoteIcon = styled.div`
-  font-size: 2.5rem;
-  color: rgba(245, 158, 11, 0.8);
-  margin-bottom: 20px;
-  position: relative;
-  z-index: 2;
-  
-  @media (max-width: 1024px) {
-    font-size: 2.2rem;
-    margin-bottom: 18px;
-  }
-  
-  @media (max-width: 768px) {
-    font-size: 2rem;
-    margin-bottom: 15px;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 1.8rem;
-    margin-bottom: 12px;
-  }
-`;
-
-const QuoteText = styled.p`
-  font-size: 1.2rem;
-  color: rgba(255, 255, 255, 0.95);
-  font-style: italic;
-  margin: 0 0 15px 0;
-  line-height: 1.6;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-  letter-spacing: 0.5px;
-  position: relative;
-  z-index: 2;
-  font-weight: 500;
-  
-  @media (max-width: 1024px) {
-    font-size: 1.1rem;
-    line-height: 1.5;
-  }
-  
-  @media (max-width: 768px) {
-    font-size: 1rem;
-    line-height: 1.4;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 0.9rem;
-    line-height: 1.3;
-  }
-`;
-
-const QuoteAuthor = styled.p`
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.7);
-  margin: 0;
-  font-weight: 400;
-  letter-spacing: 1px;
-  position: relative;
-  z-index: 2;
-  
-  @media (max-width: 768px) {
-    font-size: 0.9rem;
-  }
-  
-  @media (max-width: 480px) {
-    font-size: 0.8rem;
-  }
-`;
-
-
-// Botão principal
-const EnterButton = styled(motion.button)`
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.3) 0%, rgba(29, 78, 216, 0.2) 100%);
-  backdrop-filter: blur(30px);
-  color: white;
-  border: 3px solid rgba(59, 130, 246, 0.5);
-  border-radius: 20px;
-  padding: 20px 40px;
-  font-size: 1.2rem;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  margin: 0 auto;
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8);
-  position: relative;
-  overflow: hidden;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  transition: all 0.4s ease;
-  grid-column: 1 / -1;
-  grid-row: 3;
-  animation: ${glow} 4s ease-in-out infinite;
-  
-  @media (max-width: 1024px) {
-    grid-column: 1;
-    grid-row: 4;
-    padding: 18px 35px;
-    font-size: 1.1rem;
-    gap: 14px;
-  }
-  
-  @media (max-width: 768px) {
-    padding: 15px 30px;
-    font-size: 1rem;
-    gap: 12px;
-    letter-spacing: 1px;
-  }
-  
-  @media (max-width: 480px) {
-    padding: 12px 25px;
-    font-size: 0.9rem;
-    gap: 10px;
-  }
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.3), transparent);
-    transition: left 0.8s;
-  }
-  
-  &:hover::before {
-    left: 100%;
-  }
-  
-  &:hover {
-    transform: translateY(-5px) scale(1.05);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.5) 0%, rgba(29, 78, 216, 0.4) 100%);
-    border-color: rgba(59, 130, 246, 0.8);
-  }
-  
-  &:active {
-    transform: translateY(-2px);
-  }
-`;
-
-const HomePage = ({ onEnterApp }) => {
+const HomePage = ({ onEnter }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [quote, setQuote] = useState({
-    text: "O sucesso é a soma de pequenos esforços repetidos dia após dia.",
-    author: "Robert Collier"
+    text: "Não se turbe o vosso coração; credes em Deus, crede também em mim.",
+    author: "João 14:1"
   });
 
-  // Atualizar horário
+  // Atualizar relógio
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
@@ -682,134 +452,90 @@ const HomePage = ({ onEnterApp }) => {
 
   return (
     <HomeContainer>
-      <BackgroundEffects>
-        <FloatingShape />
-        <FloatingShape />
-        <FloatingShape />
-        <FloatingShape />
-        <FloatingShape />
-        <GradientOrb />
-      </BackgroundEffects>
+      <FloatingElements>
+        <FloatingIcon>
+          <Crown />
+        </FloatingIcon>
+        <FloatingIcon>
+          <Gem />
+        </FloatingIcon>
+        <FloatingIcon>
+          <Star />
+        </FloatingIcon>
+        <FloatingIcon>
+          <Heart />
+        </FloatingIcon>
+        <FloatingIcon>
+          <Shield />
+        </FloatingIcon>
+        <FloatingIcon>
+          <Zap />
+        </FloatingIcon>
+      </FloatingElements>
 
       <MainContent>
-        <WelcomeSection
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
+        <LeftSection>
           <TimeDisplay
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
           >
-            <Clock size={24} />
             <TimeText>{formatTime(currentTime)}</TimeText>
+            <DateText>{formatDate(currentTime)}</DateText>
           </TimeDisplay>
-          
-          <DateText>{formatDate(currentTime)}</DateText>
-          
+
           <Title
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
           >
-             Corretora Kemely Alves
+            Bem-vindo de volta
           </Title>
-          
+
           <Subtitle
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.8 }}
           >
-            Transformando sonhos em realidade
+            Transformando sonhos em realidade através de investimentos inteligentes
           </Subtitle>
-        </WelcomeSection>
 
-        <CorretoraCard
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.8, duration: 0.8 }}
-          whileHover={{ scale: 1.02, y: -5 }}
-        >
-          <CorretoraImage>
-            <img 
-              src="/kemelu.jpg" 
-              alt="Kemely" 
-              style={{
-                width: '100%',
-                height: '100%',
-                borderRadius: '50%',
-                objectFit: 'cover'
-              }}
-              onError={(e) => {
-                e.target.style.display = 'none';
-                e.target.nextSibling.style.display = 'flex';
-              }}
-            />
-            <div style={{
-              display: 'none',
-              width: '100%',
-              height: '100%',
-              borderRadius: '50%',
-              background: 'linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(29, 78, 216, 0.2))',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '4rem',
-              color: 'white'
-            }}>
-              
-            </div>
-          </CorretoraImage>
-          <CorretoraName>Kemely</CorretoraName>
-          <CorretoraTitle>Corretora de imóveis</CorretoraTitle>
-        </CorretoraCard>
+          <EnterButton
+            onClick={onEnter}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8, duration: 0.8 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <ArrowRight size={20} />
+            Acessar Sistema
+          </EnterButton>
+        </LeftSection>
 
-        <QuoteSection
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.0, duration: 0.8 }}
-        >
-          <QuoteIcon>
-            <Quote size={40} />
-          </QuoteIcon>
-          <QuoteText>"{quote.text}"</QuoteText>
-          <QuoteAuthor>— {quote.author}</QuoteAuthor>
-        </QuoteSection>
-
-
-        <EnterButton
-          onClick={onEnterApp}
-          initial={{ opacity: 0, scale: 0.8, y: 30 }}
-          animate={{ 
-            opacity: 1, 
-            scale: 1, 
-            y: 0,
-            boxShadow: [
-              "0 8px 32px rgba(0, 0, 0, 0.6)",
-              "0 12px 40px rgba(59, 130, 246, 0.3)",
-              "0 8px 32px rgba(0, 0, 0, 0.6)"
-            ]
-          }}
-          transition={{ 
-            delay: 1.2, 
-            duration: 0.8,
-            boxShadow: {
-              duration: 2,
-              repeat: Infinity,
-              repeatType: "reverse"
-            }
-          }}
-          whileHover={{ 
-            scale: 1.08, 
-            y: -8,
-            boxShadow: "0 20px 60px rgba(59, 130, 246, 0.5)"
-          }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <Sparkles size={24} />
-          Entrar na Planilha
-          <ArrowRight size={24} />
-        </EnterButton>
+        <RightSection>
+          <CorretoraCard
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3, duration: 0.8 }}
+          >
+            <CorretoraImage />
+            <CorretoraName>Corretora Kemely Alves</CorretoraName>
+            <CorretoraTitle>Especialista em Investimentos</CorretoraTitle>
+            
+            <QuoteSection
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 1, duration: 0.8 }}
+            >
+              <QuoteIcon>
+                <Quote />
+              </QuoteIcon>
+              <QuoteText>"{quote.text}"</QuoteText>
+              <QuoteAuthor>— {quote.author}</QuoteAuthor>
+            </QuoteSection>
+          </CorretoraCard>
+        </RightSection>
       </MainContent>
     </HomeContainer>
   );
