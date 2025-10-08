@@ -209,7 +209,7 @@ const CommissionForm = ({ isOpen, onClose, onCommissionAdded }) => {
     setFormData(prev => ({
       ...prev,
       valor: valor,
-      comissao: valor ? (parseFloat(valor) * 0.05).toFixed(2) : '' // 5% de comissão
+      comissao: valor ? (parseFloat(valor) * 0.0225).toFixed(2) : '' // 2,25% de comissão
     }));
   };
 

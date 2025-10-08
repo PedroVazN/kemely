@@ -25,42 +25,80 @@ import {
   Thermometer,
   Flame,
   Snowflake,
-  AlertCircle,
-  Database
+  AlertCircle
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { fetchData, insertData, updateData, deleteData, setupDatabase } from '../lib/database-setup';
+import { fetchData, insertData, updateData, deleteData } from '../lib/database-setup';
 import { format, addDays, startOfWeek, endOfWeek } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import toast from 'react-hot-toast';
-import LeadForm from './LeadForm';
-import AppointmentForm from './AppointmentForm';
-import CommissionForm from './CommissionForm';
-import EditLeadModal from './EditLeadModal';
-import DeleteConfirmModal from './DeleteConfirmModal';
+
+// Animações
+const shimmer = `
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+`;
+
+const rotate = `
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+`;
+
+const fadeInUp = `
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`;
+
+const float = `
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+`;
+
+const pulse = `
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
+  }
+`;
 
 const CorretoraContainer = styled.div`
-  background: #2a2a2a;
-  border-radius: 20px;
-  padding: 32px;
+  background: rgba(42, 42, 42, 0.8);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 40px;
   box-shadow: 
-    0 8px 32px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(59, 130, 246, 0.1);
-  border: 1px solid #ffffff;
+    0 20px 60px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   margin-bottom: 32px;
   position: relative;
   overflow: hidden;
   animation: fadeInUp 0.8s ease-out;
   
   @media (max-width: 768px) {
-    padding: 20px;
-    border-radius: 16px;
+    padding: 24px;
+    border-radius: 20px;
     margin-bottom: 24px;
   }
   
   @media (max-width: 480px) {
-    padding: 15px;
-    border-radius: 12px;
+    padding: 20px;
+    border-radius: 16px;
     margin-bottom: 20px;
   }
 
@@ -70,9 +108,25 @@ const CorretoraContainer = styled.div`
     top: 0;
     left: 0;
     right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #ffffff, transparent);
-    border-radius: 20px 20px 0 0;
+    height: 4px;
+    background: linear-gradient(90deg, 
+      rgba(255, 255, 255, 0.8) 0%, 
+      rgba(255, 255, 255, 0.4) 50%, 
+      rgba(255, 255, 255, 0.8) 100%);
+    border-radius: 24px 24px 0 0;
+    animation: shimmer 3s ease-in-out infinite;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+    pointer-events: none;
   }
 `;
 
@@ -81,8 +135,19 @@ const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 32px;
-  padding-bottom: 20px;
-  border-bottom: 2px solid #ffffff;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  }
 `;
 
 const HeaderLeft = styled.div`
@@ -170,22 +235,42 @@ const StatsGrid = styled.div`
 `;
 
 const StatCard = styled(motion.div)`
-  background: #1a1a1a;
-  border: 1px solid #ffffff;
-  border-radius: 16px;
-  padding: 20px;
+  background: rgba(26, 26, 26, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 20px;
+  padding: 24px;
   position: relative;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(59, 130, 246, 0.05);
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
 
   &:hover {
-    border-color: #3b82f6;
-    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: translateY(-4px);
     box-shadow: 
       0 20px 40px rgba(0, 0, 0, 0.6),
-      0 0 0 1px rgba(59, 130, 246, 0.2);
+      0 0 0 1px rgba(255, 255, 255, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    
+    &::before {
+      opacity: 1;
+    }
   }
 `;
 
@@ -280,21 +365,49 @@ const Tab = styled(motion.button)`
 `;
 
 const TableContainer = styled.div`
-  background: #2a2a2a;
-  border-radius: 16px;
+  background: rgba(42, 42, 42, 0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
   overflow: hidden;
-  border: 2px solid #ffffff;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  }
 `;
 
 const TableHeader = styled.div`
-  background: linear-gradient(135deg, #ffffff 0%, #e5e7eb 100%);
-  color: #1a1a1a;
-  padding: 20px 24px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  color: #ffffff;
+  padding: 24px;
   display: grid;
   grid-template-columns: ${props => props.columns};
   gap: 16px;
   font-weight: 700;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  }
   font-size: 0.875rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -304,19 +417,37 @@ const TableRow = styled(motion.div)`
   display: grid;
   grid-template-columns: ${props => props.columns};
   gap: 16px;
-  padding: 16px 24px;
-  border-bottom: 1px solid #ffffff;
+  padding: 20px 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   align-items: center;
-  transition: all 0.3s ease;
-  background: #2a2a2a;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: rgba(42, 42, 42, 0.3);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), transparent);
+    transition: width 0.3s ease;
+  }
 
   &:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-left: 3px solid #ffffff;
+    background: rgba(255, 255, 255, 0.05);
+    border-left: 3px solid rgba(255, 255, 255, 0.3);
+    transform: translateX(4px);
+    
+    &::before {
+      width: 100%;
+    }
   }
 
   &:nth-child(even) {
-    background: #1a1a1a;
+    background: rgba(26, 26, 26, 0.3);
   }
 
   &:last-child {
@@ -428,22 +559,20 @@ const ActionBtn = styled.button`
   }
 `;
 
-const CorretoraSpreadsheet = () => {
+const CorretoraSpreadsheet = ({ 
+  onLeadFormOpen, 
+  onAppointmentFormOpen, 
+  onCommissionFormOpen, 
+  onEditLead, 
+  onDeleteLead, 
+  onDeleteAppointment, 
+  onDeleteCommission 
+}) => {
   const [activeTab, setActiveTab] = useState('leads');
   const [leads, setLeads] = useState([]);
   const [appointments, setAppointments] = useState([]);
   const [commissions, setCommissions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showLeadForm, setShowLeadForm] = useState(false);
-  const [showAppointmentForm, setShowAppointmentForm] = useState(false);
-  const [showCommissionForm, setShowCommissionForm] = useState(false);
-  const [showEditLeadModal, setShowEditLeadModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [selectedLead, setSelectedLead] = useState(null);
-  const [selectedAppointment, setSelectedAppointment] = useState(null);
-  const [selectedCommission, setSelectedCommission] = useState(null);
-  const [deleteLoading, setDeleteLoading] = useState(false);
-  const [deleteType, setDeleteType] = useState('lead');
 
   useEffect(() => {
     fetchData();
@@ -489,7 +618,7 @@ const CorretoraSpreadsheet = () => {
   };
 
   const handleAddLead = () => {
-    setShowLeadForm(true);
+    onLeadFormOpen();
   };
 
   const handleLeadAdded = () => {
@@ -504,54 +633,25 @@ const CorretoraSpreadsheet = () => {
     fetchData();
   };
 
-  const handleCloseLeadForm = () => {
-    setShowLeadForm(false);
-  };
 
-  const handleCloseAppointmentForm = () => {
-    setShowAppointmentForm(false);
-  };
-
-  const handleCloseCommissionForm = () => {
-    setShowCommissionForm(false);
-  };
-
-  const handleEditLead = (lead) => {
-    setSelectedLead(lead);
-    setShowEditLeadModal(true);
-  };
-
-  const handleCloseEditLeadModal = () => {
-    setShowEditLeadModal(false);
-    setSelectedLead(null);
+  const handleEditLeadClick = (lead) => {
+    onEditLead(lead);
   };
 
   const handleLeadUpdated = () => {
     fetchData();
   };
 
-  const handleDeleteLead = (lead) => {
-    setSelectedLead(lead);
-    setSelectedAppointment(null);
-    setSelectedCommission(null);
-    setDeleteType('lead');
-    setShowDeleteModal(true);
+  const handleDeleteLeadClick = (lead) => {
+    onDeleteLead(lead);
   };
 
-  const handleDeleteAppointment = (appointment) => {
-    setSelectedAppointment(appointment);
-    setSelectedLead(null);
-    setSelectedCommission(null);
-    setDeleteType('appointment');
-    setShowDeleteModal(true);
+  const handleDeleteAppointmentClick = (appointment) => {
+    onDeleteAppointment(appointment);
   };
 
-  const handleDeleteCommission = (commission) => {
-    setSelectedCommission(commission);
-    setSelectedLead(null);
-    setSelectedAppointment(null);
-    setDeleteType('commission');
-    setShowDeleteModal(true);
+  const handleDeleteCommissionClick = (commission) => {
+    onDeleteCommission(commission);
   };
 
   const handleApproveLead = async (lead) => {
@@ -574,53 +674,6 @@ const CorretoraSpreadsheet = () => {
     }
   };
 
-  const handleCloseDeleteModal = () => {
-    setShowDeleteModal(false);
-    setSelectedLead(null);
-    setSelectedAppointment(null);
-    setSelectedCommission(null);
-    setDeleteType('lead');
-  };
-
-  const handleConfirmDelete = async () => {
-    try {
-      setDeleteLoading(true);
-      
-      let error;
-      
-      if (deleteType === 'lead' && selectedLead) {
-        const { error: leadError } = await supabase
-          .from('leads')
-          .delete()
-          .eq('id', selectedLead.id);
-        error = leadError;
-      } else if (deleteType === 'appointment' && selectedAppointment) {
-        const { error: appointmentError } = await supabase
-          .from('agendamentos')
-          .delete()
-          .eq('id', selectedAppointment.id);
-        error = appointmentError;
-      } else if (deleteType === 'commission' && selectedCommission) {
-        const { error: commissionError } = await supabase
-          .from('comissoes')
-          .delete()
-          .eq('id', selectedCommission.id);
-        error = commissionError;
-      }
-
-      if (error) throw error;
-
-      const itemName = selectedLead?.nome || selectedAppointment?.cliente || selectedCommission?.cliente;
-      toast.success(`${deleteType === 'lead' ? 'Lead' : deleteType === 'appointment' ? 'Agendamento' : 'Comissão'} excluído com sucesso!`);
-      fetchData();
-      handleCloseDeleteModal();
-    } catch (error) {
-      console.error(`Erro ao excluir ${deleteType}:`, error);
-      toast.error(`Erro ao excluir ${deleteType === 'lead' ? 'lead' : deleteType === 'appointment' ? 'agendamento' : 'comissão'}`);
-    } finally {
-      setDeleteLoading(false);
-    }
-  };
 
   const stats = {
     totalLeads: leads.length,
@@ -673,19 +726,6 @@ const CorretoraSpreadsheet = () => {
           >
             <Plus size={16} />
             Novo Lead
-          </ActionButton>
-          <ActionButton
-            onClick={async () => {
-              await setupDatabase();
-              fetchData();
-              toast.success('Banco de dados inicializado!');
-            }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            style={{ background: '#10b981', border: '1px solid #10b981' }}
-          >
-            <Database size={16} />
-            Inicializar BD
           </ActionButton>
           <ActionButton>
             <Download size={16} />
@@ -820,7 +860,7 @@ const CorretoraSpreadsheet = () => {
         {activeTab === 'appointments' && (
           <ActionButton 
             variant="primary"
-            onClick={() => setShowAppointmentForm(true)}
+            onClick={onAppointmentFormOpen}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -832,7 +872,7 @@ const CorretoraSpreadsheet = () => {
         {activeTab === 'commissions' && (
           <ActionButton 
             variant="primary"
-            onClick={() => setShowCommissionForm(true)}
+            onClick={onCommissionFormOpen}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -907,10 +947,10 @@ const CorretoraSpreadsheet = () => {
                         </ActionBtn>
                       </>
                     )}
-                    <ActionBtn onClick={() => handleEditLead(lead)}>
+                    <ActionBtn onClick={() => handleEditLeadClick(lead)}>
                       <Edit size={12} />
                     </ActionBtn>
-                    <ActionBtn onClick={() => handleDeleteLead(lead)}>
+                    <ActionBtn onClick={() => handleDeleteLeadClick(lead)}>
                       <Trash2 size={12} />
                     </ActionBtn>
                   </ActionButtons>
@@ -959,7 +999,7 @@ const CorretoraSpreadsheet = () => {
                     <ActionBtn>
                       <Edit size={12} />
                     </ActionBtn>
-                    <ActionBtn onClick={() => handleDeleteAppointment(appointment)}>
+                    <ActionBtn onClick={() => handleDeleteAppointmentClick(appointment)}>
                       <Trash2 size={12} />
                     </ActionBtn>
                   </ActionButtons>
@@ -1008,7 +1048,7 @@ const CorretoraSpreadsheet = () => {
                     <ActionBtn>
                       <Edit size={12} />
                     </ActionBtn>
-                    <ActionBtn onClick={() => handleDeleteCommission(commission)}>
+                    <ActionBtn onClick={() => handleDeleteCommissionClick(commission)}>
                       <Trash2 size={12} />
                     </ActionBtn>
                   </ActionButtons>
@@ -1019,40 +1059,6 @@ const CorretoraSpreadsheet = () => {
         )}
       </TableContainer>
 
-      <LeadForm
-        isOpen={showLeadForm}
-        onClose={handleCloseLeadForm}
-        onLeadAdded={handleLeadAdded}
-      />
-
-      <AppointmentForm
-        isOpen={showAppointmentForm}
-        onClose={handleCloseAppointmentForm}
-        onAppointmentAdded={handleAppointmentAdded}
-      />
-
-      <CommissionForm
-        isOpen={showCommissionForm}
-        onClose={handleCloseCommissionForm}
-        onCommissionAdded={handleCommissionAdded}
-      />
-
-      <EditLeadModal
-        isOpen={showEditLeadModal}
-        onClose={handleCloseEditLeadModal}
-        lead={selectedLead}
-        onLeadUpdated={handleLeadUpdated}
-      />
-
-      <DeleteConfirmModal
-        isOpen={showDeleteModal}
-        onClose={handleCloseDeleteModal}
-        onConfirm={handleConfirmDelete}
-        title={`Excluir ${deleteType === 'lead' ? 'Lead' : deleteType === 'appointment' ? 'Agendamento' : 'Comissão'}`}
-        itemName={selectedLead?.nome || selectedAppointment?.cliente || selectedCommission?.cliente}
-        itemType={deleteType}
-        loading={deleteLoading}
-      />
     </CorretoraContainer>
   );
 };

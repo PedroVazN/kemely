@@ -9,35 +9,74 @@ import { motion, AnimatePresence } from 'framer-motion';
 const ListContainer = styled.div`
   max-height: 400px;
   overflow-y: auto;
-  border-radius: 8px;
-  border: 2px solid #ffffff;
-  background: #1a1a1a;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(26, 26, 26, 0.6);
+  backdrop-filter: blur(10px);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  }
 `;
 
 const TransactionItem = styled(motion.div)`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px;
-  border-bottom: 1px solid #ffffff;
-  background: ${props => props.isIncome ? 
-    'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(34, 197, 94, 0.1) 100%)' : 
-    'linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%)'
-  };
+  padding: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: ${props => {
+    if (props.isIncome) return 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(34, 197, 94, 0.1) 100%)';
+    if (props.isDebtor) return 'linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%)';
+    return 'linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%)';
+  }};
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: 12px;
-  margin-bottom: 8px;
+  border-radius: 16px;
+  margin-bottom: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(5px);
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), transparent);
+    transition: width 0.3s ease;
+  }
 
   &:hover {
-    background: ${props => props.isIncome ? 
-      'linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(34, 197, 94, 0.2) 100%)' : 
-      'linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.2) 100%)'
-    };
-    transform: translateY(-2px);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-    border-left: 3px solid ${props => props.isIncome ? '#10b981' : '#ef4444'};
+    background: ${props => {
+      if (props.isIncome) return 'linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(34, 197, 94, 0.2) 100%)';
+      if (props.isDebtor) return 'linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.2) 100%)';
+      return 'linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.2) 100%)';
+    }};
+    transform: translateY(-4px) translateX(4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    border-left: 4px solid ${props => {
+      if (props.isIncome) return '#10b981';
+      if (props.isDebtor) return '#f59e0b';
+      return '#ef4444';
+    }};
+    
+    &::before {
+      width: 100%;
+    }
   }
 
   &:last-child {
@@ -66,7 +105,11 @@ const TransactionDetails = styled.div`
 const TransactionAmount = styled.div`
   font-weight: 700;
   font-size: 16px;
-  color: ${props => props.isIncome ? '#10b981' : '#ef4444'};
+  color: ${props => {
+    if (props.isIncome) return '#10b981';
+    if (props.isDebtor) return '#f59e0b';
+    return '#ef4444';
+  }};
   display: flex;
   align-items: center;
   gap: 5px;
@@ -278,6 +321,7 @@ const TransactionList = ({ onTransactionDeleted, filters = {} }) => {
               <TransactionItem 
                 key={transaction.id} 
                 isIncome={transaction.type === 'income'}
+                isDebtor={transaction.type === 'debtor'}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
@@ -296,8 +340,17 @@ const TransactionList = ({ onTransactionDeleted, filters = {} }) => {
                     </span>
                   </TransactionDetails>
                 </TransactionInfo>
-                <TransactionAmount isIncome={transaction.type === 'income'}>
-                  {transaction.type === 'income' ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
+                <TransactionAmount 
+                  isIncome={transaction.type === 'income'}
+                  isDebtor={transaction.type === 'debtor'}
+                >
+                  {transaction.type === 'income' ? (
+                    <TrendingUp size={16} />
+                  ) : transaction.type === 'debtor' ? (
+                    <DollarSign size={16} />
+                  ) : (
+                    <TrendingDown size={16} />
+                  )}
                   R$ {transaction.amount.toFixed(2)}
                 </TransactionAmount>
                 <ActionButtons>

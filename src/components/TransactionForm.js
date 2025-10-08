@@ -1,7 +1,87 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { supabase } from '../lib/supabase';
-import { Button, Input, Select, Card, Label, Flex } from '../styles/GlobalStyles';
+import { Button, Input, Select, Label, Flex } from '../styles/GlobalStyles';
+
+// Animações
+const shimmer = `
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+`;
+
+const rotate = `
+  @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+`;
+
+const fadeInUp = `
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`;
+
+const FormCard = styled.div`
+  background: rgba(42, 42, 42, 0.8);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.8s ease-out;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, 
+      rgba(255, 255, 255, 0.8) 0%, 
+      rgba(255, 255, 255, 0.4) 50%, 
+      rgba(255, 255, 255, 0.8) 100%);
+    border-radius: 24px 24px 0 0;
+    animation: shimmer 3s ease-in-out infinite;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+    animation: rotate 20s linear infinite;
+    pointer-events: none;
+  }
+  
+  @media (max-width: 768px) {
+    padding: 28px;
+    border-radius: 20px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 24px;
+    border-radius: 16px;
+  }
+`;
 
 const Form = styled.form`
   display: flex;
@@ -100,7 +180,7 @@ const TransactionForm = ({ onTransactionAdded }) => {
   };
 
   return (
-    <Card>
+    <FormCard>
       <h3 style={{ 
         color: '#ffffff', 
         fontSize: '1.5rem', 
@@ -192,7 +272,7 @@ const TransactionForm = ({ onTransactionAdded }) => {
             <ErrorMessage>{message}</ErrorMessage>
         )}
       </Form>
-    </Card>
+    </FormCard>
   );
 };
 

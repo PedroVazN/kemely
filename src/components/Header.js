@@ -12,7 +12,9 @@ import {
   Target,
   ArrowUpRight,
   ArrowDownRight,
-  PieChart
+  PieChart,
+  Dumbbell,
+  Cross
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
@@ -87,15 +89,15 @@ const Logo = styled.div`
 
 const QuickStats = styled.div`
   display: flex;
-  gap: 32px;
+  gap: 16px;
   align-items: center;
   
   @media (max-width: 1200px) {
-    gap: 20px;
+    gap: 12px;
   }
   
   @media (max-width: 1024px) {
-    gap: 16px;
+    gap: 8px;
   }
   
   @media (max-width: 768px) {
@@ -106,20 +108,26 @@ const QuickStats = styled.div`
 const StatItem = styled(motion.div)`
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
-  background: ${props => props.variant === 'income' ? 
-    'rgba(16, 185, 129, 0.2)' : 
-    props.variant === 'expense' ? 
-    'rgba(239, 68, 68, 0.2)' : 
-    'rgba(59, 130, 246, 0.2)'
-  };
-  border: 2px solid ${props => props.variant === 'income' ? 
-    'rgba(16, 185, 129, 0.5)' : 
-    props.variant === 'expense' ? 
-    'rgba(239, 68, 68, 0.5)' : 
-    'rgba(59, 130, 246, 0.5)'
-  };
+  gap: 6px;
+  padding: 8px 12px;
+  background: ${props => {
+    switch(props.variant) {
+      case 'income': return 'rgba(16, 185, 129, 0.2)';
+      case 'expense': return 'rgba(239, 68, 68, 0.2)';
+      case 'debtor': return 'rgba(245, 158, 11, 0.2)';
+      case 'balance': return 'rgba(59, 130, 246, 0.2)';
+      default: return 'rgba(59, 130, 246, 0.2)';
+    }
+  }};
+  border: 2px solid ${props => {
+    switch(props.variant) {
+      case 'income': return 'rgba(16, 185, 129, 0.5)';
+      case 'expense': return 'rgba(239, 68, 68, 0.5)';
+      case 'debtor': return 'rgba(245, 158, 11, 0.5)';
+      case 'balance': return 'rgba(59, 130, 246, 0.5)';
+      default: return 'rgba(59, 130, 246, 0.5)';
+    }
+  }};
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -145,18 +153,21 @@ const StatItem = styled(motion.div)`
 `;
 
 const StatValue = styled.div`
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: 700;
-  color: ${props => props.variant === 'income' ? 
-    '#10b981' : 
-    props.variant === 'expense' ? 
-    '#ef4444' : 
-    '#3b82f6'
-  };
+  color: ${props => {
+    switch(props.variant) {
+      case 'income': return '#10b981';
+      case 'expense': return '#ef4444';
+      case 'debtor': return '#f59e0b';
+      case 'balance': return '#3b82f6';
+      default: return '#3b82f6';
+    }
+  }};
 `;
 
 const StatLabel = styled.div`
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: #a0a0a0;
   font-weight: 500;
   text-transform: uppercase;
@@ -375,6 +386,7 @@ const Header = ({ onAddTransaction, onShowFilters, onExport, onShowCharts, activ
   const [summary, setSummary] = useState({
     totalIncome: 0,
     totalExpense: 0,
+    totalDebtor: 0,
     balance: 0,
     transactionCount: 0
   });
@@ -400,9 +412,14 @@ const Header = ({ onAddTransaction, onShowFilters, onExport, onShowCharts, activ
         .filter(t => t.type === 'expense')
         .reduce((sum, t) => sum + t.amount, 0);
 
+      const debtor = data
+        .filter(t => t.type === 'debtor')
+        .reduce((sum, t) => sum + t.amount, 0);
+
       setSummary({
         totalIncome: income,
         totalExpense: expense,
+        totalDebtor: debtor,
         balance: income - expense,
         transactionCount: data.length
       });
@@ -415,6 +432,9 @@ const Header = ({ onAddTransaction, onShowFilters, onExport, onShowCharts, activ
   const navItems = [
     { id: 'dashboard', label: 'Dashboard', icon: FileSpreadsheet },
     { id: 'transactions', label: 'Transações', icon: Calculator },
+    { id: 'fitness', label: 'Fitness', icon: Dumbbell },
+    { id: 'metrics', label: 'Métricas', icon: Target },
+    { id: 'devotional', label: 'Devocional', icon: Cross },
     { id: 'charts', label: 'Gráficos', icon: PieChart },
     { id: 'reports', label: 'Relatórios', icon: BarChart3 }
   ];
@@ -434,7 +454,7 @@ const Header = ({ onAddTransaction, onShowFilters, onExport, onShowCharts, activ
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <ArrowUpRight size={20} color="#10b981" />
+              <ArrowUpRight size={16} color="#10b981" />
               <div>
                 <StatValue variant="income">R$ {summary.totalIncome.toFixed(2)}</StatValue>
                 <StatLabel>Receitas</StatLabel>
@@ -446,10 +466,22 @@ const Header = ({ onAddTransaction, onShowFilters, onExport, onShowCharts, activ
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <ArrowDownRight size={20} color="#ef4444" />
+              <ArrowDownRight size={16} color="#ef4444" />
               <div>
                 <StatValue variant="expense">R$ {summary.totalExpense.toFixed(2)}</StatValue>
                 <StatLabel>Despesas</StatLabel>
+              </div>
+            </StatItem>
+
+            <StatItem
+              variant="debtor"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Target size={16} color="#f59e0b" />
+              <div>
+                <StatValue variant="debtor">R$ {summary.totalDebtor.toFixed(2)}</StatValue>
+                <StatLabel>Devedores</StatLabel>
               </div>
             </StatItem>
 
@@ -458,7 +490,7 @@ const Header = ({ onAddTransaction, onShowFilters, onExport, onShowCharts, activ
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <Target size={20} color="#3b82f6" />
+              <Target size={16} color="#3b82f6" />
               <div>
                 <StatValue variant="balance">R$ {summary.balance.toFixed(2)}</StatValue>
                 <StatLabel>Saldo</StatLabel>

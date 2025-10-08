@@ -13,7 +13,8 @@ const ModalOverlay = styled(motion.div)`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -22,13 +23,30 @@ const ModalOverlay = styled(motion.div)`
 `;
 
 const ModalContainer = styled(motion.div)`
-  background: white;
-  border-radius: 16px;
-  padding: 32px;
+  background: rgba(42, 42, 42, 0.9);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 40px;
   width: 100%;
-  max-width: 400px;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.8),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   position: relative;
+  animation: fadeInUp 0.8s ease-out;
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 `;
 
 const ModalHeader = styled.div`
@@ -36,105 +54,141 @@ const ModalHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  }
 `;
 
 const ModalTitle = styled.h2`
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  color: #dc2626;
+  color: #ef4444;
   margin: 0;
   display: flex;
   align-items: center;
   gap: 12px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 `;
 
 const CloseButton = styled.button`
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: none;
-  background: #f3f4f6;
-  color: #6b7280;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 
   &:hover {
-    background: #e5e7eb;
-    color: #374151;
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
   }
 `;
 
 const Content = styled.div`
-  margin-bottom: 24px;
+  margin-bottom: 32px;
 `;
 
 const IconContainer = styled.div`
-  width: 64px;
-  height: 64px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  background: #fef2f2;
+  background: rgba(239, 68, 68, 0.1);
+  border: 2px solid rgba(239, 68, 68, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 16px;
+  margin: 0 auto 24px;
+  animation: pulse 2s infinite;
+  
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
 `;
 
 const Message = styled.p`
-  font-size: 1rem;
-  color: #374151;
+  font-size: 1.125rem;
+  color: #e0e0e0;
   text-align: center;
-  margin: 0 0 8px 0;
-  line-height: 1.5;
+  margin: 0 0 16px 0;
+  line-height: 1.6;
+  font-weight: 400;
 `;
 
 const ItemName = styled.span`
   font-weight: 700;
-  color: #1f2937;
+  color: #ffffff;
+  background: rgba(239, 68, 68, 0.1);
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(239, 68, 68, 0.2);
 `;
 
 const Warning = styled.p`
   font-size: 0.875rem;
-  color: #6b7280;
+  color: #cccccc;
   text-align: center;
   margin: 0;
   line-height: 1.5;
+  font-style: italic;
 `;
 
 const ButtonGroup = styled.div`
   display: flex;
-  gap: 12px;
-  justify-content: flex-end;
+  gap: 16px;
+  justify-content: center;
 `;
 
 const Button = styled(motion.button)`
-  padding: 12px 24px;
-  border-radius: 8px;
+  padding: 16px 24px;
+  border-radius: 12px;
   font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   gap: 8px;
-  border: none;
+  min-width: 120px;
+  justify-content: center;
 
   ${props => props.variant === 'danger' ? `
-    background: #dc2626;
-    color: white;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: #ffffff;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.3);
     
     &:hover {
-      background: #b91c1c;
+      background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(239, 68, 68, 0.4);
     }
   ` : `
-    background: #f3f4f6;
-    color: #374151;
+    background: rgba(255, 255, 255, 0.1);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.2);
     
     &:hover {
-      background: #e5e7eb;
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
     }
   `}
 `;

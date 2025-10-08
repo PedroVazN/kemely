@@ -240,27 +240,28 @@ const CorretoraImage = styled.div`
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
   margin: 0 auto 30px;
   position: relative;
   overflow: hidden;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   animation: ${float} 6s ease-in-out infinite;
+  background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+  background-image: url('/images/kemely-alves.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 3px solid rgba(255, 255, 255, 0.3);
   
   &::before {
     content: '';
     position: absolute;
-    top: 10px;
-    left: 10px;
-    right: 10px;
-    bottom: 10px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     border-radius: 50%;
-    background: linear-gradient(135deg, #000000 0%, #333333 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 4rem;
-    color: #ffffff;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.1) 0%, rgba(255, 255, 255, 0.1) 100%);
+    z-index: 1;
   }
   
   &::after {
@@ -271,6 +272,7 @@ const CorretoraImage = styled.div`
     transform: translate(-50%, -50%);
     font-size: 4rem;
     z-index: 2;
+    display: ${props => props.hasImage ? 'none' : 'block'};
   }
 `;
 
@@ -409,12 +411,13 @@ const FloatingIcon = styled(motion.div)`
   &:nth-child(6) { top: 60%; right: 5%; animation-delay: 10s; }
 `;
 
-const HomePage = ({ onEnter }) => {
+const HomePage = ({ onEnterApp }) => {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [quote, setQuote] = useState({
     text: "Não se turbe o vosso coração; credes em Deus, crede também em mim.",
     author: "João 14:1"
   });
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   // Atualizar relógio
   useEffect(() => {
@@ -431,6 +434,14 @@ const HomePage = ({ onEnter }) => {
       text: "Não se turbe o vosso coração; credes em Deus, crede também em mim.",
       author: "João 14:1"
     });
+  }, []);
+
+  // Verificar se a imagem foi carregada
+  useEffect(() => {
+    const img = new Image();
+    img.onload = () => setImageLoaded(true);
+    img.onerror = () => setImageLoaded(false);
+    img.src = '/images/kemely-alves.jpg';
   }, []);
 
   const formatTime = (date) => {
@@ -489,7 +500,7 @@ const HomePage = ({ onEnter }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
           >
-            Bem-vindo de volta
+            Bem-vinda, de volta!
           </Title>
 
           <Subtitle
@@ -497,11 +508,11 @@ const HomePage = ({ onEnter }) => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.8 }}
           >
-            Transformando sonhos em realidade através de investimentos inteligentes
+            Transformando vidas
           </Subtitle>
 
           <EnterButton
-            onClick={onEnter}
+            onClick={onEnterApp}
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.8, duration: 0.8 }}
@@ -519,9 +530,9 @@ const HomePage = ({ onEnter }) => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3, duration: 0.8 }}
           >
-            <CorretoraImage />
+            <CorretoraImage hasImage={imageLoaded} />
             <CorretoraName>Corretora Kemely Alves</CorretoraName>
-            <CorretoraTitle>Especialista em Investimentos</CorretoraTitle>
+            <CorretoraTitle>Corretora de Imóveis</CorretoraTitle>
             
             <QuoteSection
               initial={{ opacity: 0, y: 20 }}
