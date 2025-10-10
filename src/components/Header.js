@@ -289,7 +289,7 @@ const NavigationBar = styled.div`
 `;
 
 const NavItems = styled.div`
-  display: ${props => props.$isCorretoraMode ? 'none' : 'flex'};
+  display: flex;
   gap: 16px;
   align-items: center;
 
@@ -527,15 +527,6 @@ const Header = ({ onAddTransaction, onShowFilters, onExport, onShowCharts, activ
               <span className="button-text">Exportar</span>
             </ActionButton>
 
-            <ActionButton
-              variant="primary"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={onToggleMode}
-            >
-              {isCorretoraMode ? '💰' : '🏢'}
-              <span className="button-text">{isCorretoraMode ? 'Financeiro' : 'Corretora'}</span>
-            </ActionButton>
 
             <MobileMenuButton onClick={() => setMobileMenuOpen(true)}>
               <Menu size={24} />
@@ -546,7 +537,8 @@ const Header = ({ onAddTransaction, onShowFilters, onExport, onShowCharts, activ
         {/* Navigation Bar */}
         <NavigationBar>
           <NavItems $isCorretoraMode={isCorretoraMode}>
-            {navItems.map((item, index) => (
+            {/* Mostrar abas normais apenas quando NÃO estiver no modo Corretora */}
+            {!isCorretoraMode && navItems.map((item, index) => (
               <NavItem
                 key={item.id}
                 $active={activeTab === item.id}
@@ -561,6 +553,50 @@ const Header = ({ onAddTransaction, onShowFilters, onExport, onShowCharts, activ
                 {item.label}
               </NavItem>
             ))}
+            
+            {/* Botão de Corretora - só aparece quando NÃO estiver no modo Corretora */}
+            {!isCorretoraMode && (
+              <NavItem
+                $active={false}
+                onClick={onToggleMode}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: navItems.length * 0.1 }}
+                style={{
+                  background: 'rgba(245, 158, 11, 0.1)',
+                  color: '#f59e0b',
+                  border: '1px solid rgba(245, 158, 11, 0.3)',
+                  fontWeight: '600'
+                }}
+              >
+                🏢 Corretora
+              </NavItem>
+            )}
+            
+            {/* Botão para voltar ao Financeiro (só aparece no modo Corretora) */}
+            {isCorretoraMode && (
+              <NavItem
+                $active={false}
+                onClick={onToggleMode}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                style={{
+                  background: 'rgba(34, 197, 94, 0.1)',
+                  color: '#22c55e',
+                  border: '1px solid rgba(34, 197, 94, 0.3)',
+                  fontWeight: '600',
+                  fontSize: '1rem',
+                  padding: '12px 24px'
+                }}
+              >
+                ← Voltar ao Financeiro
+              </NavItem>
+            )}
           </NavItems>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -593,7 +629,8 @@ const Header = ({ onAddTransaction, onShowFilters, onExport, onShowCharts, activ
             </MobileMenuHeader>
 
             <MobileNavItems>
-              {navItems.map((item, index) => (
+              {/* Mostrar abas normais apenas quando NÃO estiver no modo Corretora */}
+              {!isCorretoraMode && navItems.map((item, index) => (
                 <MobileNavItem
                   key={item.id}
                   onClick={() => {
@@ -610,6 +647,54 @@ const Header = ({ onAddTransaction, onShowFilters, onExport, onShowCharts, activ
                   {item.label}
                 </MobileNavItem>
               ))}
+              
+              {/* Botão de Corretora no Mobile - só aparece quando NÃO estiver no modo Corretora */}
+              {!isCorretoraMode && (
+                <MobileNavItem
+                  onClick={() => {
+                    onToggleMode();
+                    setMobileMenuOpen(false);
+                  }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: navItems.length * 0.1 }}
+                  style={{
+                    background: 'rgba(245, 158, 11, 0.1)',
+                    color: '#f59e0b',
+                    border: '1px solid rgba(245, 158, 11, 0.3)',
+                    fontWeight: '600'
+                  }}
+                >
+                  🏢 Corretora
+                </MobileNavItem>
+              )}
+              
+              {/* Botão para voltar ao Financeiro no Mobile (só aparece no modo Corretora) */}
+              {isCorretoraMode && (
+                <MobileNavItem
+                  onClick={() => {
+                    onToggleMode();
+                    setMobileMenuOpen(false);
+                  }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 }}
+                  style={{
+                    background: 'rgba(34, 197, 94, 0.1)',
+                    color: '#22c55e',
+                    border: '1px solid rgba(34, 197, 94, 0.3)',
+                    fontWeight: '600',
+                    fontSize: '1rem',
+                    padding: '16px 20px'
+                  }}
+                >
+                  ← Voltar ao Financeiro
+                </MobileNavItem>
+              )}
             </MobileNavItems>
           </MobileMenu>
         )}
