@@ -31,25 +31,63 @@ import Charts from './components/Charts';
 import AdvancedFilters from './components/AdvancedFilters';
 import ExportData from './components/ExportData';
 
+const gentleFloat = `
+  @keyframes gentleFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+`;
+
 const AppContainer = styled.div`
   min-height: 100vh;
-  background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #2a2a2a 100%);
+  background: linear-gradient(135deg, 
+    #0a0a0a 0%, 
+    #1a1a1a 25%,
+    #0f0f0f 50%,
+    #1a1a1a 75%,
+    #0a0a0a 100%
+  );
   position: relative;
   overflow-x: hidden;
 
+  /* Efeito de luz ambiente sutil */
   &::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+      circle at center,
+      rgba(255, 255, 255, 0.03) 0%,
+      transparent 50%
+    );
+    animation: gentleFloat 20s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  /* Grid pattern sutil */
+  &::after {
     content: '';
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: 
-      radial-gradient(circle at 20% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(29, 78, 216, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 40% 40%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
+    background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.3;
     pointer-events: none;
     z-index: 0;
+  }
+  
+  @keyframes gentleFloat {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
   }
   
   @media (max-width: 768px) {
@@ -84,7 +122,7 @@ const HeaderSection = styled.header`
 const MainContent = styled.main`
   padding: 0 24px;
   position: relative;
-  z-index: 1;
+  z-index: 10;
 `;
 
 const App = () => {
