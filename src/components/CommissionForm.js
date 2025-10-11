@@ -192,6 +192,7 @@ const CommissionForm = ({ isOpen, onClose, onCommissionAdded }) => {
     valor: '',
     comissao: '',
     data_venda: '',
+    data_pagamento: '',
     status: 'pendente',
     observacoes: ''
   });
@@ -236,6 +237,7 @@ const CommissionForm = ({ isOpen, onClose, onCommissionAdded }) => {
         valor: '',
         comissao: '',
         data_venda: '',
+        data_pagamento: '',
         status: 'pendente',
         observacoes: ''
       });
@@ -346,6 +348,19 @@ const CommissionForm = ({ isOpen, onClose, onCommissionAdded }) => {
               value={formData.data_venda}
               onChange={handleChange}
               required
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Label>
+              <Calendar size={16} style={{ marginRight: '8px' }} />
+              Data de Pagamento
+            </Label>
+            <Input
+              type="date"
+              name="data_pagamento"
+              value={formData.data_pagamento}
+              onChange={handleChange}
             />
           </FormGroup>
 

@@ -27,7 +27,8 @@ import {
   Zap,
   Crown,
   Shield,
-  Lightbulb
+  Lightbulb,
+  RefreshCw
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { fetchData, insertData, updateData, deleteData } from '../lib/database-setup';
@@ -748,6 +749,14 @@ const DevotionalPlanner = ({ onFormOpen, onEdit, onDelete, currentWeek, onWeekCh
           >
             <Plus size={16} />
             Novo Planejamento
+          </ActionButton>
+          <ActionButton
+            onClick={fetchData}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <RefreshCw size={16} />
+            Atualizar
           </ActionButton>
           <ActionButton>
             <Download size={16} />

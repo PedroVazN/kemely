@@ -28,7 +28,8 @@ import {
   Filter,
   Download,
   ChevronRight,
-  ChevronLeft
+  ChevronLeft,
+  RefreshCw
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { fetchData, insertData, updateData, deleteData } from '../lib/database-setup';
@@ -732,6 +733,14 @@ const WeeklyMetrics = ({ onFormOpen, onEdit, onDelete, currentWeek, onWeekChange
           >
             <Plus size={16} />
             Novo Planejamento
+          </ActionButton>
+          <ActionButton
+            onClick={fetchData}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <RefreshCw size={16} />
+            Atualizar
           </ActionButton>
           <ActionButton>
             <Download size={16} />

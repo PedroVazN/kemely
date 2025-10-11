@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { formatCurrency, formatNumber } from '../utils/formatters';
 
 const ExportContainer = styled(Card)`
   margin-bottom: 24px;
@@ -114,7 +115,7 @@ const ExportData = () => {
           t.description,
           t.type === 'income' ? 'Receita' : 'Despesa',
           t.category,
-          t.amount.toFixed(2)
+          formatNumber(t.amount, 2)
         ])
       ].map(row => row.join(',')).join('\n');
 
@@ -163,9 +164,9 @@ const ExportData = () => {
       pdf.text('RESUMO FINANCEIRO', 20, 75);
       
       pdf.setFontSize(12);
-      pdf.text(`Total de Receitas: R$ ${totalIncome.toFixed(2)}`, 20, 90);
-      pdf.text(`Total de Despesas: R$ ${totalExpense.toFixed(2)}`, 20, 100);
-      pdf.text(`Saldo: R$ ${balance.toFixed(2)}`, 20, 110);
+      pdf.text(`Total de Receitas: ${formatCurrency(totalIncome)}`, 20, 90);
+      pdf.text(`Total de Despesas: ${formatCurrency(totalExpense)}`, 20, 100);
+      pdf.text(`Saldo: ${formatCurrency(balance)}`, 20, 110);
       pdf.text(`Total de Transações: ${transactions.length}`, 20, 120);
       
       // Tabela de transações
@@ -199,7 +200,7 @@ const ExportData = () => {
         pdf.text(transaction.description.substring(0, 20), 50, yPosition);
         pdf.text(transaction.type === 'income' ? 'Receita' : 'Despesa', 120, yPosition);
         pdf.text(transaction.category, 140, yPosition);
-        pdf.text(`R$ ${transaction.amount.toFixed(2)}`, 170, yPosition);
+        pdf.text(formatCurrency(transaction.amount), 170, yPosition);
         
         yPosition += lineHeight;
       });
@@ -251,18 +252,18 @@ Gerado em: ${format(new Date(), 'dd/MM/yyyy HH:mm', { locale: ptBR })}
 
 RESUMO GERAL
 ------------
-Total de Receitas: R$ ${summary.resumo.totalReceitas.toFixed(2)}
-Total de Despesas: R$ ${summary.resumo.totalDespesas.toFixed(2)}
-Saldo: R$ ${summary.resumo.saldo.toFixed(2)}
+Total de Receitas: ${formatCurrency(summary.resumo.totalReceitas)}
+Total de Despesas: ${formatCurrency(summary.resumo.totalDespesas)}
+Saldo: ${formatCurrency(summary.resumo.saldo)}
 Total de Transações: ${summary.resumo.totalTransacoes}
 
 DETALHAMENTO POR CATEGORIA
 --------------------------
 ${Object.entries(summary.categorias).map(([categoria, dados]) => 
   `${categoria}:
-  Receitas: R$ ${dados.receitas.toFixed(2)}
-  Despesas: R$ ${dados.despesas.toFixed(2)}
-  Saldo: R$ ${(dados.receitas - dados.despesas).toFixed(2)}
+  Receitas: ${formatCurrency(dados.receitas)}
+  Despesas: ${formatCurrency(dados.despesas)}
+  Saldo: ${formatCurrency(dados.receitas - dados.despesas)}
   `
 ).join('\n')}
       `.trim();

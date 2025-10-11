@@ -23,6 +23,7 @@ import { supabase } from '../lib/supabase';
 import { fetchData } from '../lib/database-setup';
 import { format, subDays, startOfMonth, endOfMonth } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { formatCurrency } from '../utils/formatters';
 
 // Animações
 const shimmer = `
@@ -464,7 +465,7 @@ const Dashboard = () => {
             </CardIcon>
           </CardHeader>
           
-          <MainValue>R$ {dashboardData.monthlyBalance.toFixed(2)}</MainValue>
+          <MainValue>{formatCurrency(dashboardData.monthlyBalance)}</MainValue>
           <SubValue>
             {dashboardData.monthlyBalance >= 0 ? 'Saldo Positivo' : 'Saldo Negativo'}
           </SubValue>
@@ -473,19 +474,19 @@ const Dashboard = () => {
             <div>
               <div style={{ fontSize: '0.875rem', color: '#64748b', marginBottom: '4px' }}>Receitas</div>
               <div style={{ fontSize: '1.25rem', fontWeight: '700', color: '#10b981' }}>
-                R$ {dashboardData.monthlyIncome.toFixed(2)}
+                {formatCurrency(dashboardData.monthlyIncome)}
               </div>
             </div>
             <div>
               <div style={{ fontSize: '0.875rem', color: '#64748b', marginBottom: '4px' }}>Despesas</div>
               <div style={{ fontSize: '1.25rem', fontWeight: '700', color: '#ef4444' }}>
-                R$ {dashboardData.monthlyExpense.toFixed(2)}
+                {formatCurrency(dashboardData.monthlyExpense)}
               </div>
             </div>
             <div>
               <div style={{ fontSize: '0.875rem', color: '#64748b', marginBottom: '4px' }}>Pessoas Devendo</div>
               <div style={{ fontSize: '1.25rem', fontWeight: '700', color: '#f59e0b' }}>
-                R$ {dashboardData.monthlyDebtor.toFixed(2)}
+                {formatCurrency(dashboardData.monthlyDebtor)}
               </div>
             </div>
           </div>
@@ -504,7 +505,7 @@ const Dashboard = () => {
             </CardIcon>
           </CardHeader>
           
-          <MainValue>R$ {(dashboardData.weeklyIncome - dashboardData.weeklyExpense).toFixed(2)}</MainValue>
+          <MainValue>{formatCurrency(dashboardData.weeklyIncome - dashboardData.weeklyExpense)}</MainValue>
           <SubValue>Saldo da semana</SubValue>
           
           <TrendIndicator $positive={dashboardData.weeklyIncome > dashboardData.weeklyExpense}>
@@ -530,14 +531,14 @@ const Dashboard = () => {
             </CardIcon>
           </CardHeader>
           
-          <MainValue style={{ color: '#f59e0b' }}>R$ {dashboardData.monthlyDebtor.toFixed(2)}</MainValue>
+          <MainValue style={{ color: '#f59e0b' }}>{formatCurrency(dashboardData.monthlyDebtor)}</MainValue>
           <SubValue>Valor total em débito</SubValue>
           
           <div style={{ display: 'flex', gap: '24px', marginTop: '16px' }}>
             <div>
               <div style={{ fontSize: '0.875rem', color: '#64748b', marginBottom: '4px' }}>Esta Semana</div>
               <div style={{ fontSize: '1rem', fontWeight: '600', color: '#f59e0b' }}>
-                R$ {dashboardData.weeklyDebtor.toFixed(2)}
+                {formatCurrency(dashboardData.weeklyDebtor)}
               </div>
             </div>
             <div>
@@ -593,7 +594,7 @@ const Dashboard = () => {
                     </TransactionDetails>
                   </TransactionInfo>
                   <TransactionAmount isIncome={transaction.type === 'income'}>
-                    {transaction.type === 'income' ? '+' : transaction.type === 'debtor' ? '👥' : '-'}R$ {transaction.amount.toFixed(2)}
+                    {transaction.type === 'income' ? '+' : transaction.type === 'debtor' ? '👥' : '-'}{formatCurrency(transaction.amount).replace('R$', '').trim()}
                   </TransactionAmount>
                 </TransactionItem>
               ))

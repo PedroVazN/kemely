@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Toaster } from 'react-hot-toast';
 import { AnimatePresence } from 'framer-motion';
@@ -90,7 +90,10 @@ const MainContent = styled.main`
 const App = () => {
   const [refreshKey, setRefreshKey] = useState(0);
   const [filters, setFilters] = useState({});
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState(() => {
+    // Recupera a aba ativa do localStorage ao iniciar
+    return localStorage.getItem('activeTab') || 'dashboard';
+  });
   const [showFilters, setShowFilters] = useState(false);
   const [showExport, setShowExport] = useState(false);
   const [showCharts, setShowCharts] = useState(false);
@@ -133,6 +136,11 @@ const App = () => {
   const [selectedCommission, setSelectedCommission] = useState(null);
   const [corretoraDeleteType, setCorretoraDeleteType] = useState('');
 
+  // Salva a aba ativa no localStorage sempre que mudar
+  useEffect(() => {
+    localStorage.setItem('activeTab', activeTab);
+  }, [activeTab]);
+
   const handleTransactionAdded = () => {
     setRefreshKey(prev => prev + 1);
   };
@@ -150,6 +158,10 @@ const App = () => {
   };
 
   const handleTabChange = (tab) => {
+    if (tab === 'home') {
+      setShowHomePage(true);
+      return;
+    }
     setActiveTab(tab);
     setShowFilters(false);
     setShowExport(false);
@@ -174,6 +186,7 @@ const App = () => {
 
   const handleEnterApp = () => {
     setShowHomePage(false);
+    setActiveTab('dashboard');
   };
 
   // Funções para gerenciar modais de métricas semanais

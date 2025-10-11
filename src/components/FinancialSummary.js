@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { supabase } from '../lib/supabase';
 import { DollarSign, TrendingUp, TrendingDown, Wallet } from 'lucide-react';
+import { formatCurrency } from '../utils/formatters';
 
 // Animações
 const shimmer = `
@@ -189,7 +190,7 @@ const FinancialSummary = ({ onDataChange }) => {
             <TrendingUp size={48} />
           </SummaryIcon>
           <SummaryTitle>Total de Receitas</SummaryTitle>
-          <SummaryValue>R$ {summary.totalIncome.toFixed(2)}</SummaryValue>
+          <SummaryValue>{formatCurrency(summary.totalIncome)}</SummaryValue>
           <SummarySubtitle>Entradas</SummarySubtitle>
         </SummaryCard>
 
@@ -198,7 +199,7 @@ const FinancialSummary = ({ onDataChange }) => {
             <TrendingDown size={48} />
           </SummaryIcon>
           <SummaryTitle>Total de Despesas</SummaryTitle>
-          <SummaryValue>R$ {summary.totalExpense.toFixed(2)}</SummaryValue>
+          <SummaryValue>{formatCurrency(summary.totalExpense)}</SummaryValue>
           <SummarySubtitle>Saídas</SummarySubtitle>
         </SummaryCard>
 
@@ -210,7 +211,7 @@ const FinancialSummary = ({ onDataChange }) => {
             <Wallet size={48} />
           </SummaryIcon>
           <SummaryTitle>Saldo Atual</SummaryTitle>
-          <SummaryValue>R$ {summary.balance.toFixed(2)}</SummaryValue>
+          <SummaryValue>{formatCurrency(summary.balance)}</SummaryValue>
           <SummarySubtitle>
             {summary.balance >= 0 ? 'Positivo' : 'Negativo'}
           </SummarySubtitle>

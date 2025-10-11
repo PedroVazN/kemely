@@ -14,7 +14,8 @@ import {
   AlertCircle,
   UserCheck,
   UserX,
-  Download
+  Download,
+  RefreshCw
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { updateData } from '../lib/database-setup';
@@ -406,6 +407,15 @@ const LeadsSpreadsheet = ({
           </div>
         </HeaderLeft>
         <HeaderRight>
+          <ActionButton 
+            onClick={fetchLeads}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            title="Atualizar planilha"
+          >
+            <RefreshCw size={16} />
+            Atualizar
+          </ActionButton>
           <ActionButton 
             variant="primary"
             onClick={onLeadFormOpen}

@@ -5,6 +5,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Trash2, Edit, DollarSign, TrendingUp, TrendingDown, Search, Filter } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { formatCurrency } from '../utils/formatters';
 
 const ListContainer = styled.div`
   max-height: 400px;
@@ -351,7 +352,7 @@ const TransactionList = ({ onTransactionDeleted, filters = {} }) => {
                   ) : (
                     <TrendingDown size={16} />
                   )}
-                  R$ {transaction.amount.toFixed(2)}
+                  {formatCurrency(transaction.amount)}
                 </TransactionAmount>
                 <ActionButtons>
                   <ActionButton onClick={() => handleDelete(transaction.id)} danger>

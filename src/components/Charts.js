@@ -17,6 +17,7 @@ import {
 import { supabase } from '../lib/supabase';
 import { Subtitle } from '../styles/GlobalStyles';
 import { TrendingUp, PieChart as PieChartIcon, BarChart3 } from 'lucide-react';
+import { formatCurrency, formatNumber } from '../utils/formatters';
 
 // Animações
 const shimmer = `
@@ -282,7 +283,7 @@ const Charts = () => {
                   if (active && payload && payload.length) {
                     return (
                       <CustomTooltip>
-                        <p>{`${payload[0].name}: R$ ${payload[0].value.toFixed(2)}`}</p>
+                        <p>{`${payload[0].name}: ${formatCurrency(payload[0].value)}`}</p>
                       </CustomTooltip>
                     );
                   }
@@ -318,7 +319,7 @@ const Charts = () => {
                         <p style={{ margin: 0, fontWeight: '600' }}>{label}</p>
                         {payload.map((entry, index) => (
                           <p key={index} style={{ margin: '4px 0', color: entry.color }}>
-                            {`${entry.name}: R$ ${entry.value.toFixed(2)}`}
+                            {`${entry.name}: ${formatCurrency(entry.value)}`}
                           </p>
                         ))}
                       </CustomTooltip>
@@ -358,7 +359,7 @@ const Charts = () => {
                         <p style={{ margin: 0, fontWeight: '600' }}>{label}</p>
                         {payload.map((entry, index) => (
                           <p key={index} style={{ margin: '4px 0', color: entry.color }}>
-                            {`${entry.name}: R$ ${entry.value.toFixed(2)}`}
+                            {`${entry.name}: ${formatCurrency(entry.value)}`}
                           </p>
                         ))}
                       </CustomTooltip>

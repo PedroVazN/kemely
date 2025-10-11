@@ -339,6 +339,8 @@ const DevotionalForm = ({ isOpen, onClose, onPlanAdded, editingItem, currentWeek
   const [formData, setFormData] = useState({
     type: 'fasting',
     date: new Date().toISOString().split('T')[0],
+    data_inicio: '',
+    data_termino: '',
     time: '',
     fast_type: '',
     duration: '',
@@ -362,6 +364,8 @@ const DevotionalForm = ({ isOpen, onClose, onPlanAdded, editingItem, currentWeek
       setFormData({
         type: editingItem.type || 'fasting',
         date: editingItem.date || new Date().toISOString().split('T')[0],
+        data_inicio: editingItem.data_inicio || '',
+        data_termino: editingItem.data_termino || '',
         time: editingItem.time || '',
         fast_type: editingItem.fast_type || '',
         duration: editingItem.duration || '',
@@ -378,6 +382,8 @@ const DevotionalForm = ({ isOpen, onClose, onPlanAdded, editingItem, currentWeek
       setFormData({
         type: 'fasting',
         date: new Date().toISOString().split('T')[0],
+        data_inicio: '',
+        data_termino: '',
         time: '',
         fast_type: '',
         duration: '',
@@ -506,20 +512,25 @@ const DevotionalForm = ({ isOpen, onClose, onPlanAdded, editingItem, currentWeek
           </FormGroup>
 
           <FormGroup>
-            <Label>Selecione o Dia da Semana</Label>
-            <WeekDays>
-              {weekDays.map((day, index) => (
-                <DayButton
-                  key={index}
-                  type="button"
-                  selected={format(day, 'yyyy-MM-dd') === formData.date}
-                  onClick={() => handleDaySelect(day)}
-                >
-                  <div>{format(day, 'EEE', { locale: ptBR })}</div>
-                  <div>{format(day, 'dd')}</div>
-                </DayButton>
-              ))}
-            </WeekDays>
+            <Label>Data de Início</Label>
+            <Input
+              type="date"
+              name="data_inicio"
+              value={formData.data_inicio}
+              onChange={handleChange}
+              required
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Label>Data de Término</Label>
+            <Input
+              type="date"
+              name="data_termino"
+              value={formData.data_termino}
+              onChange={handleChange}
+              required
+            />
           </FormGroup>
 
           {activeTab === 'fasting' && (

@@ -25,9 +25,11 @@ import {
   Zap,
   AlertCircle,
   Trophy,
-  Flame
+  Flame,
+  RefreshCw
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { formatNumber } from '../utils/formatters';
 import { fetchData, insertData, updateData, deleteData } from '../lib/database-setup';
 import { format, addDays, startOfWeek, endOfWeek } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -624,7 +626,7 @@ const FitnessSpreadsheet = ({ onFormOpen, onEdit, onDelete }) => {
       workouts: thisWeekWorkouts.length,
       meals: thisWeekMeals.length,
       water: totalWater,
-      sleep: avgSleep.toFixed(1)
+      sleep: formatNumber(avgSleep, 1)
     };
   };
 
@@ -651,6 +653,15 @@ const FitnessSpreadsheet = ({ onFormOpen, onEdit, onDelete }) => {
           </HeaderInfo>
         </HeaderLeft>
         <HeaderRight>
+          <ActionButton
+            onClick={fetchData}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            title="Atualizar planilha"
+          >
+            <RefreshCw size={16} />
+            Atualizar
+          </ActionButton>
           <ActionButton
             onClick={handleAdd}
             whileHover={{ scale: 1.05 }}

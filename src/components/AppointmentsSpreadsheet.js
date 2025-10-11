@@ -9,7 +9,8 @@ import {
   Edit,
   Trash2,
   Eye,
-  Download
+  Download,
+  RefreshCw
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
@@ -377,6 +378,15 @@ const AppointmentsSpreadsheet = ({
           </div>
         </HeaderLeft>
         <HeaderRight>
+          <ActionButton 
+            onClick={fetchAppointments}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            title="Atualizar planilha"
+          >
+            <RefreshCw size={16} />
+            Atualizar
+          </ActionButton>
           <ActionButton 
             variant="primary"
             onClick={onAppointmentFormOpen}

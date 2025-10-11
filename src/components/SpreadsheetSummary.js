@@ -15,11 +15,13 @@ import {
   ArrowUpRight,
   ArrowDownRight,
   Minus,
-  Plus
+  Plus,
+  RefreshCw
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { format, startOfMonth, endOfMonth, startOfWeek, endOfWeek } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { formatCurrency } from '../utils/formatters';
 
 // Animações
 const shimmer = `
@@ -484,6 +486,10 @@ const SpreadsheetSummary = () => {
           </div>
         </HeaderLeft>
         <HeaderRight>
+          <ActionButton onClick={fetchSummaryData} title="Atualizar planilha">
+            <RefreshCw size={16} />
+            Atualizar
+          </ActionButton>
           <ActionButton variant="primary">
             <Download size={16} />
             Exportar
@@ -511,16 +517,16 @@ const SpreadsheetSummary = () => {
               <BarChart3 size={20} />
             </CardIcon>
           </CardHeader>
-          <CardValue>R$ {summaryData.monthly.balance.toFixed(2)}</CardValue>
+          <CardValue>{formatCurrency(summaryData.monthly.balance)}</CardValue>
           <CardSubtitle>Saldo do mês atual</CardSubtitle>
           <CardDetails>
             <DetailItem $positive>
               <Plus size={14} />
-              R$ {summaryData.monthly.income.toFixed(2)}
+              {formatCurrency(summaryData.monthly.income)}
             </DetailItem>
             <DetailItem $negative>
               <Minus size={14} />
-              R$ {summaryData.monthly.expense.toFixed(2)}
+              {formatCurrency(summaryData.monthly.expense)}
             </DetailItem>
             <DetailItem>
               {summaryData.monthly.transactionCount} transações
@@ -543,16 +549,16 @@ const SpreadsheetSummary = () => {
               <TrendingUp size={20} />
             </CardIcon>
           </CardHeader>
-          <CardValue>R$ {summaryData.weekly.balance.toFixed(2)}</CardValue>
+          <CardValue>{formatCurrency(summaryData.weekly.balance)}</CardValue>
           <CardSubtitle>Saldo da semana atual</CardSubtitle>
           <CardDetails>
             <DetailItem $positive>
               <ArrowUpRight size={14} />
-              R$ {summaryData.weekly.income.toFixed(2)}
+              {formatCurrency(summaryData.weekly.income)}
             </DetailItem>
             <DetailItem $negative>
               <ArrowDownRight size={14} />
-              R$ {summaryData.weekly.expense.toFixed(2)}
+              {formatCurrency(summaryData.weekly.expense)}
             </DetailItem>
             <DetailItem>
               {summaryData.weekly.transactionCount} transações
@@ -575,16 +581,16 @@ const SpreadsheetSummary = () => {
               <Calculator size={20} />
             </CardIcon>
           </CardHeader>
-          <CardValue>R$ {summaryData.daily.balance.toFixed(2)}</CardValue>
+          <CardValue>{formatCurrency(summaryData.daily.balance)}</CardValue>
           <CardSubtitle>Saldo de hoje</CardSubtitle>
           <CardDetails>
             <DetailItem $positive>
               <Plus size={14} />
-              R$ {summaryData.daily.income.toFixed(2)}
+              {formatCurrency(summaryData.daily.income)}
             </DetailItem>
             <DetailItem $negative>
               <Minus size={14} />
-              R$ {summaryData.daily.expense.toFixed(2)}
+              {formatCurrency(summaryData.daily.expense)}
             </DetailItem>
             <DetailItem>
               {summaryData.daily.transactionCount} transações
@@ -635,7 +641,7 @@ const SpreadsheetSummary = () => {
               <TableCell bold style={{ 
                 color: transaction.type === 'income' ? '#10b981' : '#ef4444'
               }}>
-                {transaction.type === 'income' ? '+' : '-'}R$ {transaction.amount.toFixed(2)}
+                {transaction.type === 'income' ? '+' : '-'}{formatCurrency(transaction.amount).replace('R$', '').trim()}
               </TableCell>
             </TableRow>
           ))

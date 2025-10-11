@@ -9,12 +9,14 @@ import {
   Edit,
   Trash2,
   Eye,
-  Download
+  Download,
+  RefreshCw
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import toast from 'react-hot-toast';
+import { formatCurrency } from '../utils/formatters';
 
 const Container = styled.div`
   background: rgba(42, 42, 42, 0.8);
@@ -375,6 +377,15 @@ const CommissionsSpreadsheet = ({
         </HeaderLeft>
         <HeaderRight>
           <ActionButton 
+            onClick={fetchCommissions}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            title="Atualizar planilha"
+          >
+            <RefreshCw size={16} />
+            Atualizar
+          </ActionButton>
+          <ActionButton 
             variant="primary"
             onClick={onCommissionFormOpen}
             whileHover={{ scale: 1.05 }}
@@ -405,7 +416,7 @@ const CommissionsSpreadsheet = ({
               <DollarSign size={16} />
             </StatIcon>
           </StatHeader>
-          <StatValue>R$ {stats.total.toFixed(2)}</StatValue>
+          <StatValue>{formatCurrency(stats.total)}</StatValue>
           <StatSubtitle>Valor total</StatSubtitle>
         </StatCard>
 
@@ -459,34 +470,38 @@ const CommissionsSpreadsheet = ({
               <DollarSign size={16} />
             </StatIcon>
           </StatHeader>
-          <StatValue>R$ {stats.valorTotal.toFixed(2)}</StatValue>
+          <StatValue>{formatCurrency(stats.valorTotal)}</StatValue>
           <StatSubtitle>Valor total vendas</StatSubtitle>
         </StatCard>
       </StatsGrid>
 
       <TableContainer>
-        <TableHeader columns="1fr 1fr 1fr 1fr 1fr 1fr 1fr">
+        <TableHeader columns="1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr">
           <div>Cliente</div>
           <div>Produto</div>
           <div>Valor</div>
           <div>Comissão</div>
-          <div>Data</div>
+          <div>Data Venda</div>
+          <div>Data Pgto</div>
           <div>Status</div>
           <div>Ações</div>
         </TableHeader>
         {commissions.map((commission, index) => (
           <TableRow
             key={commission.id}
-            columns="1fr 1fr 1fr 1fr 1fr 1fr 1fr"
+            columns="1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.05 }}
           >
             <TableCell bold>{commission.cliente}</TableCell>
             <TableCell>{commission.produto}</TableCell>
-            <TableCell>R$ {parseFloat(commission.valor).toFixed(2)}</TableCell>
-            <TableCell bold style={{ color: '#ffffff' }}>R$ {parseFloat(commission.comissao).toFixed(2)}</TableCell>
+            <TableCell>{formatCurrency(parseFloat(commission.valor))}</TableCell>
+            <TableCell bold style={{ color: '#ffffff' }}>{formatCurrency(parseFloat(commission.comissao))}</TableCell>
             <TableCell>{format(new Date(commission.data_venda), 'dd/MM/yyyy', { locale: ptBR })}</TableCell>
+            <TableCell>
+              {commission.data_pagamento ? format(new Date(commission.data_pagamento), 'dd/MM/yyyy', { locale: ptBR }) : '-'}
+            </TableCell>
             <TableCell>
               <StatusBadge status={commission.status}>
                 {commission.status === 'pago' && <CheckCircle size={12} />}
