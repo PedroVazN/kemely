@@ -6,7 +6,9 @@ import { GlobalStyle, Container, Title, Grid } from './styles/GlobalStyles';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
 import SpreadsheetSummary from './components/SpreadsheetSummary';
-import CorretoraSpreadsheet from './components/CorretoraSpreadsheet';
+import LeadsSpreadsheet from './components/LeadsSpreadsheet';
+import AppointmentsSpreadsheet from './components/AppointmentsSpreadsheet';
+import CommissionsSpreadsheet from './components/CommissionsSpreadsheet';
 import FitnessSpreadsheet from './components/FitnessSpreadsheet';
 import WeeklyMetrics from './components/WeeklyMetrics';
 import WeeklyPlanForm from './components/WeeklyPlanForm';
@@ -92,7 +94,6 @@ const App = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [showExport, setShowExport] = useState(false);
   const [showCharts, setShowCharts] = useState(false);
-  const [isCorretoraMode, setIsCorretoraMode] = useState(false);
   const [showHomePage, setShowHomePage] = useState(true);
   
   // Estados para modais de métricas semanais
@@ -169,14 +170,6 @@ const App = () => {
 
   const handleShowCharts = () => {
     setShowCharts(!showCharts);
-  };
-
-  const handleToggleMode = () => {
-    setIsCorretoraMode(!isCorretoraMode);
-    setActiveTab('dashboard');
-    setShowFilters(false);
-    setShowExport(false);
-    setShowCharts(false);
   };
 
   const handleEnterApp = () => {
@@ -508,20 +501,6 @@ const App = () => {
   };
 
   const renderContent = () => {
-    if (isCorretoraMode) {
-      return (
-        <CorretoraSpreadsheet
-          onLeadFormOpen={handleLeadFormOpen}
-          onAppointmentFormOpen={handleAppointmentFormOpen}
-          onCommissionFormOpen={handleCommissionFormOpen}
-          onEditLead={handleEditLead}
-          onDeleteLead={handleDeleteLead}
-          onDeleteAppointment={handleDeleteAppointment}
-          onDeleteCommission={handleDeleteCommission}
-        />
-      );
-    }
-
     switch (activeTab) {
       case 'dashboard':
         return (
@@ -540,6 +519,28 @@ const App = () => {
               key={refreshKey}
             />
           </Grid>
+        );
+      case 'leads':
+        return (
+          <LeadsSpreadsheet
+            onLeadFormOpen={handleLeadFormOpen}
+            onEditLead={handleEditLead}
+            onDeleteLead={handleDeleteLead}
+          />
+        );
+      case 'appointments':
+        return (
+          <AppointmentsSpreadsheet
+            onAppointmentFormOpen={handleAppointmentFormOpen}
+            onDeleteAppointment={handleDeleteAppointment}
+          />
+        );
+      case 'commissions':
+        return (
+          <CommissionsSpreadsheet
+            onCommissionFormOpen={handleCommissionFormOpen}
+            onDeleteCommission={handleDeleteCommission}
+          />
         );
       case 'fitness':
         return (
@@ -631,8 +632,6 @@ const App = () => {
         onShowCharts={handleShowCharts}
         activeTab={activeTab}
         onTabChange={handleTabChange}
-        onToggleMode={handleToggleMode}
-        isCorretoraMode={isCorretoraMode}
       />
       
       <MainContent>
