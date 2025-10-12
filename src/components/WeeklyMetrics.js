@@ -600,10 +600,9 @@ const EmptyState = styled.div`
 `;
 
 const WeeklyMetrics = ({ onFormOpen, onEdit, onDelete, currentWeek, onWeekChange }) => {
-  const [activeTab, setActiveTab] = useState('plans');
+  const [activeTab, setActiveTab] = useState('personal');
   const [weeklyPlans, setWeeklyPlans] = useState([]);
   const [goals, setGoals] = useState([]);
-  const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -617,19 +616,16 @@ const WeeklyMetrics = ({ onFormOpen, onEdit, onDelete, currentWeek, onWeekChange
       const weekStart = startOfWeek(currentWeek, { weekStartsOn: 1 });
       const weekEnd = endOfWeek(currentWeek, { weekStartsOn: 1 });
       
-      const [plansData, goalsData, tasksData] = await Promise.all([
+      const [plansData, goalsData] = await Promise.all([
         supabase.from('weekly_plans').select('*').gte('date', weekStart.toISOString().split('T')[0]).lte('date', weekEnd.toISOString().split('T')[0]).order('date', { ascending: true }),
-        supabase.from('weekly_goals').select('*').gte('week_start', weekStart.toISOString().split('T')[0]).lte('week_start', weekEnd.toISOString().split('T')[0]),
-        supabase.from('weekly_tasks').select('*').gte('date', weekStart.toISOString().split('T')[0]).lte('date', weekEnd.toISOString().split('T')[0]).order('date', { ascending: true })
+        supabase.from('weekly_goals').select('*').gte('week_start', weekStart.toISOString().split('T')[0]).lte('week_start', weekEnd.toISOString().split('T')[0])
       ]);
 
       if (plansData.error) throw plansData.error;
       if (goalsData.error) throw goalsData.error;
-      if (tasksData.error) throw tasksData.error;
 
       setWeeklyPlans(plansData.data || []);
       setGoals(goalsData.data || []);
-      setTasks(tasksData.data || []);
     } catch (error) {
       console.error('Erro ao buscar dados:', error);
       toast.error('Erro ao carregar dados');
@@ -676,23 +672,18 @@ const WeeklyMetrics = ({ onFormOpen, onEdit, onDelete, currentWeek, onWeekChange
       return goalDate >= weekStart && goalDate <= weekEnd;
     });
 
-    const weekTasks = tasks.filter(task => {
-      const taskDate = new Date(task.date);
-      return taskDate >= weekStart && taskDate <= weekEnd;
-    });
-
-    const completedTasks = weekTasks.filter(task => task.status === 'completed').length;
-    const scheduledAppointments = weekPlans.filter(plan => plan.type === 'appointment').length;
-    const propertyVisits = weekPlans.filter(plan => plan.type === 'visit').length;
-    const potentialSales = weekPlans.filter(plan => plan.type === 'sale').length;
+    // Filtrar agendamentos pessoais e de corretora
+    const personalPlans = weekPlans.filter(plan => plan.type === 'personal');
+    const corretoraPlans = weekPlans.filter(plan => 
+      plan.type !== 'personal' && 
+      ['visita_decorado', 'primeira_visita', 'segunda_visita', 'primeira_visita_aprovado', 'retorno', 'reuniao', 'follow_up', 'apresentacao', 'vistoria'].includes(plan.type)
+    );
 
     return {
-      totalPlans: weekPlans.length,
+      totalPersonal: personalPlans.length,
+      totalCorretora: corretoraPlans.length,
       totalGoals: weekGoals.length,
-      completedTasks,
-      scheduledAppointments,
-      propertyVisits,
-      potentialSales
+      totalPlans: weekPlans.length
     };
   };
 
@@ -775,13 +766,13 @@ const WeeklyMetrics = ({ onFormOpen, onEdit, onDelete, currentWeek, onWeekChange
           transition={{ delay: 0.1 }}
         >
           <StatHeader>
-            <StatTitle>Planejamentos</StatTitle>
+            <StatTitle>Agendamentos Pessoais</StatTitle>
             <StatIcon variant="leads">
-              <Calendar size={20} />
+              <Users size={20} />
             </StatIcon>
           </StatHeader>
-          <StatValue>{stats.totalPlans}</StatValue>
-          <StatSubtitle>Atividades planejadas</StatSubtitle>
+          <StatValue>{stats.totalPersonal}</StatValue>
+          <StatSubtitle>Agendamentos pessoais</StatSubtitle>
         </StatCard>
 
         <StatCard
@@ -790,13 +781,13 @@ const WeeklyMetrics = ({ onFormOpen, onEdit, onDelete, currentWeek, onWeekChange
           transition={{ delay: 0.2 }}
         >
           <StatHeader>
-            <StatTitle>Agendamentos</StatTitle>
+            <StatTitle>Agendamentos Corretora</StatTitle>
             <StatIcon variant="appointments">
-              <Users size={20} />
+              <Home size={20} />
             </StatIcon>
           </StatHeader>
-          <StatValue>{stats.scheduledAppointments}</StatValue>
-          <StatSubtitle>Reuniões agendadas</StatSubtitle>
+          <StatValue>{stats.totalCorretora}</StatValue>
+          <StatSubtitle>Visitas e reuniões</StatSubtitle>
         </StatCard>
 
         <StatCard
@@ -805,13 +796,13 @@ const WeeklyMetrics = ({ onFormOpen, onEdit, onDelete, currentWeek, onWeekChange
           transition={{ delay: 0.3 }}
         >
           <StatHeader>
-            <StatTitle>Visitas</StatTitle>
+            <StatTitle>Metas</StatTitle>
             <StatIcon variant="visits">
-              <Home size={20} />
+              <Target size={20} />
             </StatIcon>
           </StatHeader>
-          <StatValue>{stats.propertyVisits}</StatValue>
-          <StatSubtitle>Visitas a imóveis</StatSubtitle>
+          <StatValue>{stats.totalGoals}</StatValue>
+          <StatSubtitle>Metas da semana</StatSubtitle>
         </StatCard>
 
         <StatCard
@@ -820,23 +811,30 @@ const WeeklyMetrics = ({ onFormOpen, onEdit, onDelete, currentWeek, onWeekChange
           transition={{ delay: 0.4 }}
         >
           <StatHeader>
-            <StatTitle>Vendas Potenciais</StatTitle>
+            <StatTitle>Total</StatTitle>
             <StatIcon variant="sales">
-              <DollarSign size={20} />
+              <Calendar size={20} />
             </StatIcon>
           </StatHeader>
-          <StatValue>{stats.potentialSales}</StatValue>
-          <StatSubtitle>Oportunidades de venda</StatSubtitle>
+          <StatValue>{stats.totalPlans}</StatValue>
+          <StatSubtitle>Atividades planejadas</StatSubtitle>
         </StatCard>
       </StatsGrid>
 
       <TabsContainer>
         <Tab 
-          active={activeTab === 'plans'} 
-          onClick={() => setActiveTab('plans')}
+          active={activeTab === 'personal'} 
+          onClick={() => setActiveTab('personal')}
         >
-          <Calendar size={16} />
-          Planejamentos
+          <Users size={16} />
+          Pessoal
+        </Tab>
+        <Tab 
+          active={activeTab === 'corretora'} 
+          onClick={() => setActiveTab('corretora')}
+        >
+          <Home size={16} />
+          Corretora
         </Tab>
         <Tab 
           active={activeTab === 'goals'} 
@@ -845,44 +843,31 @@ const WeeklyMetrics = ({ onFormOpen, onEdit, onDelete, currentWeek, onWeekChange
           <Target size={16} />
           Metas
         </Tab>
-        <Tab 
-          active={activeTab === 'tasks'} 
-          onClick={() => setActiveTab('tasks')}
-        >
-          <CheckCircle size={16} />
-          Tarefas
-        </Tab>
       </TabsContainer>
 
       <TableContainer>
-        {activeTab === 'plans' && (
+        {activeTab === 'personal' && (
           <>
-            <TableHeader columns="1fr 1fr 1fr 1fr 1fr 80px">
+            <TableHeader columns="1fr 2fr 1fr 1fr 80px">
               <div>Data</div>
-              <div>Tipo</div>
               <div>Atividade</div>
               <div>Cliente</div>
               <div>Status</div>
               <div>Ações</div>
             </TableHeader>
-            {weeklyPlans.length === 0 ? (
-              <EmptyState>Nenhum planejamento registrado para esta semana</EmptyState>
+            {weeklyPlans.filter(p => p.type === 'personal').length === 0 ? (
+              <EmptyState>Nenhum agendamento pessoal para esta semana</EmptyState>
             ) : (
-              weeklyPlans.map((plan, index) => (
+              weeklyPlans.filter(p => p.type === 'personal').map((plan, index) => (
                 <TableRow
                   key={plan.id}
-                  columns="1fr 1fr 1fr 1fr 1fr 80px"
+                  columns="1fr 2fr 1fr 1fr 80px"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
                 >
                   <TableCell>
                     {format(new Date(plan.date), 'dd/MM/yyyy', { locale: ptBR })}
-                  </TableCell>
-                  <TableCell>
-                    <StatusBadge status={plan.type === 'appointment' ? 'scheduled' : plan.type === 'visit' ? 'pending' : 'completed'}>
-                      {plan.type === 'appointment' ? 'Reunião' : plan.type === 'visit' ? 'Visita' : 'Venda'}
-                    </StatusBadge>
                   </TableCell>
                   <TableCell bold>{plan.activity}</TableCell>
                   <TableCell>{plan.client_name || '-'}</TableCell>
@@ -903,6 +888,72 @@ const WeeklyMetrics = ({ onFormOpen, onEdit, onDelete, currentWeek, onWeekChange
                   </TableCell>
                 </TableRow>
               ))
+            )}
+          </>
+        )}
+
+        {activeTab === 'corretora' && (
+          <>
+            <TableHeader columns="1fr 1fr 1fr 1fr 1fr 80px">
+              <div>Data</div>
+              <div>Tipo</div>
+              <div>Atividade</div>
+              <div>Cliente</div>
+              <div>Status</div>
+              <div>Ações</div>
+            </TableHeader>
+            {weeklyPlans.filter(p => p.type !== 'personal').length === 0 ? (
+              <EmptyState>Nenhum agendamento de corretora para esta semana</EmptyState>
+            ) : (
+              weeklyPlans.filter(p => p.type !== 'personal').map((plan, index) => {
+                const typeLabels = {
+                  'visita_decorado': 'Visita Decorado',
+                  'primeira_visita': '1ª Visita',
+                  'segunda_visita': '2ª Visita',
+                  'primeira_visita_aprovado': '1ª Visita Aprovado',
+                  'retorno': 'Retorno',
+                  'reuniao': 'Reunião',
+                  'follow_up': 'Follow-up',
+                  'apresentacao': 'Apresentação',
+                  'vistoria': 'Vistoria'
+                };
+                
+                return (
+                  <TableRow
+                    key={plan.id}
+                    columns="1fr 1fr 1fr 1fr 1fr 80px"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                  >
+                    <TableCell>
+                      {format(new Date(plan.date), 'dd/MM/yyyy', { locale: ptBR })}
+                    </TableCell>
+                    <TableCell>
+                      <StatusBadge status="scheduled">
+                        {typeLabels[plan.type] || plan.type}
+                      </StatusBadge>
+                    </TableCell>
+                    <TableCell bold>{plan.activity}</TableCell>
+                    <TableCell>{plan.client_name || '-'}</TableCell>
+                    <TableCell>
+                      <StatusBadge status={plan.status}>
+                        {plan.status === 'completed' ? 'Concluído' : plan.status === 'pending' ? 'Pendente' : 'Agendado'}
+                      </StatusBadge>
+                    </TableCell>
+                    <TableCell>
+                      <div style={{ display: 'flex', gap: '8px' }}>
+                        <ActionBtn onClick={() => handleEdit(plan, 'plan')}>
+                          <Edit size={16} />
+                        </ActionBtn>
+                        <ActionBtn onClick={() => handleDelete(plan, 'plan')}>
+                          <Trash2 size={16} />
+                        </ActionBtn>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
             )}
           </>
         )}
@@ -951,57 +1002,6 @@ const WeeklyMetrics = ({ onFormOpen, onEdit, onDelete, currentWeek, onWeekChange
           </>
         )}
 
-        {activeTab === 'tasks' && (
-          <>
-            <TableHeader columns="1fr 1fr 1fr 1fr 1fr 80px">
-              <div>Data</div>
-              <div>Tarefa</div>
-              <div>Prioridade</div>
-              <div>Categoria</div>
-              <div>Status</div>
-              <div>Ações</div>
-            </TableHeader>
-            {tasks.length === 0 ? (
-              <EmptyState>Nenhuma tarefa registrada para esta semana</EmptyState>
-            ) : (
-              tasks.map((task, index) => (
-                <TableRow
-                  key={task.id}
-                  columns="1fr 1fr 1fr 1fr 1fr 80px"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                >
-                  <TableCell>
-                    {format(new Date(task.date), 'dd/MM/yyyy', { locale: ptBR })}
-                  </TableCell>
-                  <TableCell bold>{task.task_name}</TableCell>
-                  <TableCell>
-                    <StatusBadge status={task.priority === 'high' ? 'cancelled' : task.priority === 'medium' ? 'pending' : 'scheduled'}>
-                      {task.priority === 'high' ? 'Alta' : task.priority === 'medium' ? 'Média' : 'Baixa'}
-                    </StatusBadge>
-                  </TableCell>
-                  <TableCell>{task.category || '-'}</TableCell>
-                  <TableCell>
-                    <StatusBadge status={task.status}>
-                      {task.status === 'completed' ? 'Concluída' : task.status === 'in_progress' ? 'Em Andamento' : 'Pendente'}
-                    </StatusBadge>
-                  </TableCell>
-                  <TableCell>
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      <ActionBtn onClick={() => handleEdit(task, 'task')}>
-                        <Edit size={16} />
-                      </ActionBtn>
-                      <ActionBtn onClick={() => handleDelete(task, 'task')}>
-                        <Trash2 size={16} />
-                      </ActionBtn>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))
-            )}
-          </>
-        )}
       </TableContainer>
 
     </MetricsContainer>
