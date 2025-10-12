@@ -327,7 +327,7 @@ const ProfileImage = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 4rem;
-    display: ${props => props.hasImage ? 'none' : 'block'};
+    display: ${props => props.$hasImage ? 'none' : 'block'};
   }
 `;
 
@@ -592,7 +592,7 @@ const HomePage = ({ onEnterApp }) => {
             transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
           >
             <ProfileImageWrapper>
-              <ProfileImage hasImage={imageLoaded} />
+              <ProfileImage $hasImage={imageLoaded} />
             </ProfileImageWrapper>
             
             <ProfileName>

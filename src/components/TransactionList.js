@@ -38,8 +38,8 @@ const TransactionItem = styled(motion.div)`
   padding: 24px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   background: ${props => {
-    if (props.isIncome) return 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(34, 197, 94, 0.1) 100%)';
-    if (props.isDebtor) return 'linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%)';
+    if (props.$isIncome) return 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(34, 197, 94, 0.1) 100%)';
+    if (props.$isDebtor) return 'linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%)';
     return 'linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%)';
   }};
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -63,15 +63,15 @@ const TransactionItem = styled(motion.div)`
 
   &:hover {
     background: ${props => {
-      if (props.isIncome) return 'linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(34, 197, 94, 0.2) 100%)';
-      if (props.isDebtor) return 'linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.2) 100%)';
+      if (props.$isIncome) return 'linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(34, 197, 94, 0.2) 100%)';
+      if (props.$isDebtor) return 'linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.2) 100%)';
       return 'linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.2) 100%)';
     }};
     transform: translateY(-4px) translateX(4px);
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
     border-left: 4px solid ${props => {
-      if (props.isIncome) return '#10b981';
-      if (props.isDebtor) return '#f59e0b';
+      if (props.$isIncome) return '#10b981';
+      if (props.$isDebtor) return '#f59e0b';
       return '#ef4444';
     }};
     
@@ -107,8 +107,8 @@ const TransactionAmount = styled.div`
   font-weight: 700;
   font-size: 16px;
   color: ${props => {
-    if (props.isIncome) return '#10b981';
-    if (props.isDebtor) return '#f59e0b';
+    if (props.$isIncome) return '#10b981';
+    if (props.$isDebtor) return '#f59e0b';
     return '#ef4444';
   }};
   display: flex;
@@ -133,9 +133,9 @@ const ActionButton = styled.button`
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 
   &:hover {
-    background: ${props => props.danger ? '#ef4444' : '#ffffff'};
-    border-color: ${props => props.danger ? '#dc2626' : '#f3f4f6'};
-    color: ${props => props.danger ? '#ffffff' : '#1a1a1a'};
+    background: ${props => props.$danger ? '#ef4444' : '#ffffff'};
+    border-color: ${props => props.$danger ? '#dc2626' : '#f3f4f6'};
+    color: ${props => props.$danger ? '#ffffff' : '#1a1a1a'};
     transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
   }
@@ -157,9 +157,9 @@ const FilterContainer = styled.div`
 
 const FilterButton = styled.button`
   padding: 8px 16px;
-  border: 2px solid ${props => props.active ? '#4A90E2' : '#E6F3FF'};
-  background: ${props => props.active ? '#4A90E2' : 'transparent'};
-  color: ${props => props.active ? 'white' : '#4A90E2'};
+  border: 2px solid ${props => props.$active ? '#4A90E2' : '#E6F3FF'};
+  background: ${props => props.$active ? '#4A90E2' : 'transparent'};
+  color: ${props => props.$active ? 'white' : '#4A90E2'};
   border-radius: 20px;
   cursor: pointer;
   font-size: 12px;
@@ -280,25 +280,25 @@ const TransactionList = ({ onTransactionDeleted, filters = {} }) => {
     <div>
       <FilterContainer>
         <FilterButton 
-          active={filter === 'all'} 
+          $active={filter === 'all'} 
           onClick={() => setFilter('all')}
         >
           Todas
         </FilterButton>
         <FilterButton 
-          active={filter === 'income'} 
+          $active={filter === 'income'} 
           onClick={() => setFilter('income')}
         >
           Receitas
         </FilterButton>
         <FilterButton 
-          active={filter === 'expense'} 
+          $active={filter === 'expense'} 
           onClick={() => setFilter('expense')}
         >
           Despesas
         </FilterButton>
         <FilterButton 
-          active={filter === 'debtor'} 
+          $active={filter === 'debtor'} 
           onClick={() => setFilter('debtor')}
         >
           Devedores
@@ -321,8 +321,8 @@ const TransactionList = ({ onTransactionDeleted, filters = {} }) => {
             filteredTransactions.map((transaction, index) => (
               <TransactionItem 
                 key={transaction.id} 
-                isIncome={transaction.type === 'income'}
-                isDebtor={transaction.type === 'debtor'}
+                $isIncome={transaction.type === 'income'}
+                $isDebtor={transaction.type === 'debtor'}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
@@ -342,8 +342,8 @@ const TransactionList = ({ onTransactionDeleted, filters = {} }) => {
                   </TransactionDetails>
                 </TransactionInfo>
                 <TransactionAmount 
-                  isIncome={transaction.type === 'income'}
-                  isDebtor={transaction.type === 'debtor'}
+                  $isIncome={transaction.type === 'income'}
+                  $isDebtor={transaction.type === 'debtor'}
                 >
                   {transaction.type === 'income' ? (
                     <TrendingUp size={16} />
@@ -355,7 +355,7 @@ const TransactionList = ({ onTransactionDeleted, filters = {} }) => {
                   {formatCurrency(transaction.amount)}
                 </TransactionAmount>
                 <ActionButtons>
-                  <ActionButton onClick={() => handleDelete(transaction.id)} danger>
+                  <ActionButton onClick={() => handleDelete(transaction.id)} $danger>
                     <Trash2 size={16} />
                   </ActionButton>
                 </ActionButtons>

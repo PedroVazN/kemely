@@ -429,12 +429,7 @@ const WeeklyPlanForm = ({ isOpen, onClose, onPlanAdded, editingItem, currentWeek
       setLoading(true);
       setMessage('');
 
-      const dataToInsert = {
-        ...formData,
-        target_value: formData.target_value ? parseFloat(formData.target_value) : null,
-        progress: formData.progress ? parseInt(formData.progress) : 0,
-        estimated_duration: formData.estimated_duration ? parseInt(formData.estimated_duration) : null
-      };
+      let dataToInsert = {};
 
       const tableMap = {
         plan: 'weekly_plans',
@@ -442,18 +437,55 @@ const WeeklyPlanForm = ({ isOpen, onClose, onPlanAdded, editingItem, currentWeek
         task: 'weekly_tasks'
       };
 
+      // Preparar dados baseado no tipo
+      if (activeTab === 'plan') {
+        dataToInsert = {
+          type: formData.type,
+          date: formData.date,
+          activity: formData.activity,
+          client_name: formData.client_name || null,
+          client_phone: formData.client_phone || null,
+          client_email: formData.client_email || null,
+          property_address: formData.property_address || null,
+          status: formData.status,
+          priority: formData.priority,
+          notes: formData.notes || null,
+          estimated_duration: formData.estimated_duration ? parseInt(formData.estimated_duration) : null
+        };
+      } else if (activeTab === 'goal') {
+        dataToInsert = {
+          goal_name: formData.goal_name,
+          target_value: formData.target_value ? parseFloat(formData.target_value) : null,
+          progress: formData.progress ? parseInt(formData.progress) : 0,
+          status: formData.status,
+          week_start: formData.date
+        };
+      } else if (activeTab === 'task') {
+        dataToInsert = {
+          task_name: formData.task_name,
+          category: formData.category || null,
+          priority: formData.priority,
+          status: formData.status,
+          date: formData.date,
+          deadline: formData.deadline || null
+        };
+      }
+
       if (editingItem) {
         await updateData(tableMap[activeTab], editingItem.id, dataToInsert);
         setMessage('Planejamento atualizado com sucesso!');
+        toast.success('Planejamento atualizado!');
       } else {
         await insertData(tableMap[activeTab], dataToInsert);
         setMessage('Planejamento criado com sucesso!');
+        toast.success('Planejamento criado!');
       }
       
       onPlanAdded();
     } catch (error) {
       console.error('Erro ao salvar:', error);
       setMessage('Erro ao salvar planejamento');
+      toast.error('Erro ao salvar planejamento');
     } finally {
       setLoading(false);
     }

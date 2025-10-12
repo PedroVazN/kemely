@@ -304,14 +304,14 @@ const TransactionIcon = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 10px;
-  background: ${props => props.isIncome ? 
+  background: ${props => props.$isIncome ? 
     'rgba(16, 185, 129, 0.1)' : 
     'rgba(239, 68, 68, 0.1)'
   };
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${props => props.isIncome ? 
+  color: ${props => props.$isIncome ? 
     '#10b981' : 
     '#ef4444'
   };
@@ -335,7 +335,7 @@ const TransactionDate = styled.div`
 const TransactionAmount = styled.div`
   font-weight: 700;
   font-size: 1.125rem;
-  color: ${props => props.isIncome ? '#10b981' : '#ef4444'};
+  color: ${props => props.$isIncome ? '#10b981' : '#ef4444'};
 `;
 
 const EmptyState = styled.div`
@@ -575,7 +575,7 @@ const Dashboard = () => {
                   transition={{ delay: index * 0.1 }}
                 >
                   <TransactionInfo>
-                    <TransactionIcon isIncome={transaction.type === 'income'}>
+                    <TransactionIcon $isIncome={transaction.type === 'income'}>
                       {transaction.type === 'income' ? (
                         <TrendingUp size={20} />
                       ) : transaction.type === 'debtor' ? (
@@ -593,7 +593,7 @@ const Dashboard = () => {
                       </TransactionDate>
                     </TransactionDetails>
                   </TransactionInfo>
-                  <TransactionAmount isIncome={transaction.type === 'income'}>
+                  <TransactionAmount $isIncome={transaction.type === 'income'}>
                     {transaction.type === 'income' ? '+' : transaction.type === 'debtor' ? '👥' : '-'}{formatCurrency(transaction.amount).replace('R$', '').trim()}
                   </TransactionAmount>
                 </TransactionItem>

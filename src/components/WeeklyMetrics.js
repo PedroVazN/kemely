@@ -508,7 +508,7 @@ const TableRow = styled(motion.div)`
 const TableCell = styled.div`
   font-size: 0.875rem;
   color: #ffffff;
-  font-weight: ${props => props.bold ? '700' : '500'};
+  font-weight: ${props => props.$bold ? '700' : '500'};
   display: flex;
   align-items: center;
   gap: 8px;
@@ -869,7 +869,7 @@ const WeeklyMetrics = ({ onFormOpen, onEdit, onDelete, currentWeek, onWeekChange
                   <TableCell>
                     {format(new Date(plan.date), 'dd/MM/yyyy', { locale: ptBR })}
                   </TableCell>
-                  <TableCell bold>{plan.activity}</TableCell>
+                  <TableCell $bold>{plan.activity}</TableCell>
                   <TableCell>{plan.client_name || '-'}</TableCell>
                   <TableCell>
                     <StatusBadge status={plan.status}>
@@ -934,7 +934,7 @@ const WeeklyMetrics = ({ onFormOpen, onEdit, onDelete, currentWeek, onWeekChange
                         {typeLabels[plan.type] || plan.type}
                       </StatusBadge>
                     </TableCell>
-                    <TableCell bold>{plan.activity}</TableCell>
+                    <TableCell $bold>{plan.activity}</TableCell>
                     <TableCell>{plan.client_name || '-'}</TableCell>
                     <TableCell>
                       <StatusBadge status={plan.status}>
@@ -978,7 +978,7 @@ const WeeklyMetrics = ({ onFormOpen, onEdit, onDelete, currentWeek, onWeekChange
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
                 >
-                  <TableCell bold>{goal.goal_name}</TableCell>
+                  <TableCell $bold>{goal.goal_name}</TableCell>
                   <TableCell>R$ {goal.target_value?.toLocaleString('pt-BR') || '-'}</TableCell>
                   <TableCell>{goal.progress || 0}%</TableCell>
                   <TableCell>
