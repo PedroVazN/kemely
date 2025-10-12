@@ -421,11 +421,11 @@ const Header = ({ onAddTransaction, onShowFilters, onExport, onShowCharts, activ
     { id: 'dashboard', label: 'Dashboard', icon: FileSpreadsheet },
     { id: 'transactions', label: 'Transações', icon: Calculator },
     { id: 'fitness', label: 'Fitness', icon: Dumbbell },
+    { id: 'checklist', label: 'Checklist', icon: Calendar },
     { id: 'metrics', label: 'Métricas', icon: Target },
     { id: 'devotional', label: 'Devocional', icon: Cross },
     { id: 'leads', label: 'Leads', icon: Users },
-    { id: 'commissions', label: 'Comissões', icon: DollarSign },
-    { id: 'appointments', label: 'Agendamentos', icon: Calendar }
+    { id: 'commissions', label: 'Comissões', icon: DollarSign }
   ];
 
   return (

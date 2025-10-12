@@ -336,7 +336,7 @@ const DayButton = styled.button`
 
 const WeeklyPlanForm = ({ isOpen, onClose, onPlanAdded, editingItem, currentWeek }) => {
   const [formData, setFormData] = useState({
-    type: 'appointment',
+    type: 'personal',
     date: new Date().toISOString().split('T')[0],
     activity: '',
     client_name: '',
@@ -385,7 +385,7 @@ const WeeklyPlanForm = ({ isOpen, onClose, onPlanAdded, editingItem, currentWeek
       setActiveTab(editingItem.type || 'plan');
     } else {
       setFormData({
-        type: 'appointment',
+        type: 'personal',
         date: new Date().toISOString().split('T')[0],
         activity: '',
         client_name: '',
@@ -536,17 +536,27 @@ const WeeklyPlanForm = ({ isOpen, onClose, onPlanAdded, editingItem, currentWeek
           {activeTab === 'plan' && (
             <>
               <FormGroup>
-                <Label>Tipo de Atividade</Label>
+                <Label>Tipo de Agendamento</Label>
                 <Select
                   name="type"
                   value={formData.type}
                   onChange={handleChange}
                   required
                 >
-                  <option value="appointment">Reunião</option>
-                  <option value="visit">Visita a Imóvel</option>
-                  <option value="sale">Oportunidade de Venda</option>
-                  <option value="follow_up">Follow-up</option>
+                  <optgroup label="Pessoal">
+                    <option value="personal">Agendamento Pessoal</option>
+                  </optgroup>
+                  <optgroup label="Corretora">
+                    <option value="visita_decorado">Visita Decorado</option>
+                    <option value="primeira_visita">1ª Visita</option>
+                    <option value="segunda_visita">2ª Visita</option>
+                    <option value="primeira_visita_aprovado">1ª Visita Aprovado</option>
+                    <option value="retorno">Retorno</option>
+                    <option value="reuniao">Reunião</option>
+                    <option value="follow_up">Follow-up</option>
+                    <option value="apresentacao">Apresentação de Proposta</option>
+                    <option value="vistoria">Vistoria</option>
+                  </optgroup>
                 </Select>
               </FormGroup>
               <FormGroup>

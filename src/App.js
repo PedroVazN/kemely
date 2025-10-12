@@ -30,6 +30,7 @@ import FinancialSummary from './components/FinancialSummary';
 import Charts from './components/Charts';
 import AdvancedFilters from './components/AdvancedFilters';
 import ExportData from './components/ExportData';
+import Checklist from './components/Checklist';
 
 const gentleFloat = `
   @keyframes gentleFloat {
@@ -579,13 +580,8 @@ const App = () => {
             onDeleteLead={handleDeleteLead}
           />
         );
-      case 'appointments':
-        return (
-          <AppointmentsSpreadsheet
-            onAppointmentFormOpen={handleAppointmentFormOpen}
-            onDeleteAppointment={handleDeleteAppointment}
-          />
-        );
+      case 'checklist':
+        return <Checklist />;
       case 'commissions':
         return (
           <CommissionsSpreadsheet
