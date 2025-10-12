@@ -385,8 +385,8 @@ const Tab = styled.button`
   padding: 12px 20px;
   border: none;
   border-radius: 12px;
-  background: ${props => props.active ? 'rgba(255, 255, 255, 0.2)' : 'transparent'};
-  color: ${props => props.active ? '#ffffff' : '#cccccc'};
+  background: ${props => props.$active ? 'rgba(255, 255, 255, 0.2)' : 'transparent'};
+  color: ${props => props.$active ? '#ffffff' : '#cccccc'};
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -823,21 +823,21 @@ const WeeklyMetrics = ({ onFormOpen, onEdit, onDelete, currentWeek, onWeekChange
 
       <TabsContainer>
         <Tab 
-          active={activeTab === 'personal'} 
+          $active={activeTab === 'personal'} 
           onClick={() => setActiveTab('personal')}
         >
           <Users size={16} />
           Pessoal
         </Tab>
         <Tab 
-          active={activeTab === 'corretora'} 
+          $active={activeTab === 'corretora'} 
           onClick={() => setActiveTab('corretora')}
         >
           <Home size={16} />
           Corretora
         </Tab>
         <Tab 
-          active={activeTab === 'goals'} 
+          $active={activeTab === 'goals'} 
           onClick={() => setActiveTab('goals')}
         >
           <Target size={16} />

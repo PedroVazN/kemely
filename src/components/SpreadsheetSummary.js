@@ -324,7 +324,7 @@ const TableRow = styled(motion.div)`
 const TableCell = styled.div`
   font-size: 0.875rem;
   color: #ffffff;
-  font-weight: ${props => props.bold ? '700' : '500'};
+  font-weight: ${props => props.$bold ? '700' : '500'};
   display: flex;
   align-items: center;
   gap: 8px;
@@ -620,7 +620,7 @@ const SpreadsheetSummary = () => {
               <TableCell>
                 {format(new Date(transaction.date), 'dd/MM/yyyy', { locale: ptBR })}
               </TableCell>
-              <TableCell bold>
+              <TableCell $bold>
                 {transaction.description}
               </TableCell>
               <TableCell>
