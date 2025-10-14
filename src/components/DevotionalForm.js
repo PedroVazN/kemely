@@ -421,18 +421,53 @@ const DevotionalForm = ({ isOpen, onClose, onPlanAdded, editingItem, currentWeek
       setLoading(true);
       setMessage('');
 
-      const dataToInsert = {
-        ...formData,
-        duration: formData.duration ? parseInt(formData.duration) : null,
-        week_start: formData.type === 'bible' ? formData.date : null
-      };
-
       const tableMap = {
         fasting: 'devotional_fasting',
         prayer: 'devotional_prayer',
         bible: 'devotional_bible_study',
         worship: 'devotional_worship'
       };
+
+      // Filtrar campos específicos para cada tipo de tabela
+      let dataToInsert = {};
+
+      if (activeTab === 'fasting') {
+        dataToInsert = {
+          date: formData.data_inicio || formData.date,
+          fast_type: formData.fast_type,
+          duration: formData.duration ? parseInt(formData.duration) : null,
+          purpose: formData.purpose || null,
+          status: formData.status,
+          notes: formData.notes || null
+        };
+      } else if (activeTab === 'prayer') {
+        dataToInsert = {
+          date: formData.data_inicio || formData.date,
+          time: formData.time,
+          theme: formData.theme,
+          duration: formData.duration ? parseInt(formData.duration) : null,
+          status: formData.status,
+          notes: formData.notes || null
+        };
+      } else if (activeTab === 'bible') {
+        dataToInsert = {
+          week_start: formData.data_inicio || formData.date,
+          theme: formData.theme,
+          book_chapter: formData.book_chapter,
+          verses: formData.verses || null,
+          status: formData.status,
+          notes: formData.notes || null
+        };
+      } else if (activeTab === 'worship') {
+        dataToInsert = {
+          date: formData.data_inicio || formData.date,
+          time: formData.time,
+          activity: formData.activity,
+          duration: formData.duration ? parseInt(formData.duration) : null,
+          status: formData.status,
+          notes: formData.notes || null
+        };
+      }
 
       if (editingItem) {
         await updateData(tableMap[activeTab], editingItem.id, dataToInsert);
@@ -443,6 +478,11 @@ const DevotionalForm = ({ isOpen, onClose, onPlanAdded, editingItem, currentWeek
       }
       
       onPlanAdded();
+      
+      // Fechar o formulário após 1.5 segundos de sucesso
+      setTimeout(() => {
+        onClose();
+      }, 1500);
     } catch (error) {
       console.error('Erro ao salvar:', error);
       setMessage('Erro ao salvar planejamento devocional');
