@@ -15,7 +15,8 @@ import {
   UserCheck,
   UserX,
   Download,
-  RefreshCw
+  RefreshCw,
+  MessageCircle
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { updateData } from '../lib/database-setup';
@@ -237,11 +238,24 @@ const TableRow = styled(motion.div)`
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   align-items: center;
   transition: all 0.3s ease;
-  background: rgba(42, 42, 42, 0.3);
+  background: ${props => props.needsRebate ? 
+    'rgba(239, 68, 68, 0.15)' : 
+    'rgba(42, 42, 42, 0.3)'
+  };
+  border-left: ${props => props.needsRebate ? 
+    '4px solid #ef4444' : 
+    'none'
+  };
 
   &:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-left: 3px solid rgba(255, 255, 255, 0.3);
+    background: ${props => props.needsRebate ? 
+      'rgba(239, 68, 68, 0.25)' : 
+      'rgba(255, 255, 255, 0.05)'
+    };
+    border-left: ${props => props.needsRebate ? 
+      '4px solid #ef4444' : 
+      '3px solid rgba(255, 255, 255, 0.3)'
+    };
     transform: translateX(4px);
   }
 
@@ -311,7 +325,7 @@ const ActionBtn = styled.button`
   padding: 6px 12px;
   border: 1px solid #ffffff;
   border-radius: 8px;
-  background: #1a1a1a;
+  background: ${props => props.variant === 'rebate' ? '#25D366' : '#1a1a1a'};
   color: #ffffff;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -319,11 +333,14 @@ const ActionBtn = styled.button`
   align-items: center;
   gap: 4px;
   font-size: 0.75rem;
+  font-weight: ${props => props.variant === 'rebate' ? '600' : '400'};
+  border-color: ${props => props.variant === 'rebate' ? '#25D366' : '#ffffff'};
 
   &:hover {
-    background: #ffffff;
-    color: #1a1a1a;
+    background: ${props => props.variant === 'rebate' ? '#128C7E' : '#ffffff'};
+    color: ${props => props.variant === 'rebate' ? '#ffffff' : '#1a1a1a'};
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
   }
 `;
 
@@ -377,11 +394,60 @@ const LeadsSpreadsheet = ({
     }
   };
 
+  // Função para verificar se precisa rebater (mais de 2 dias)
+  const needsRebate = (lead) => {
+    const referenceDate = lead.ultimo_rebate ? new Date(lead.ultimo_rebate) : new Date(lead.created_at);
+    const daysDifference = Math.floor((new Date() - referenceDate) / (1000 * 60 * 60 * 24));
+    return daysDifference >= 2;
+  };
+
+  // Função para formatar o número de telefone para WhatsApp
+  const formatPhoneForWhatsApp = (phone) => {
+    // Remove todos os caracteres não numéricos
+    const cleaned = phone.replace(/\D/g, '');
+    
+    // Se já tiver código do país (55), retorna
+    if (cleaned.startsWith('55')) {
+      return cleaned;
+    }
+    
+    // Se tiver 11 dígitos (DDD + número), adiciona 55
+    if (cleaned.length === 11 || cleaned.length === 10) {
+      return '55' + cleaned;
+    }
+    
+    // Caso contrário, retorna como está
+    return cleaned;
+  };
+
+  // Função para rebater o lead
+  const handleRebateLead = async (lead) => {
+    try {
+      const phoneFormatted = formatPhoneForWhatsApp(lead.telefone);
+      const whatsappUrl = `https://wa.me/${phoneFormatted}`;
+      
+      // Abrir WhatsApp
+      window.open(whatsappUrl, '_blank');
+      
+      // Atualizar a data do último rebate no banco
+      await updateData('leads', lead.id, { 
+        ultimo_rebate: new Date().toISOString() 
+      });
+      
+      toast.success('WhatsApp aberto! Data de rebate atualizada.');
+      fetchLeads();
+    } catch (error) {
+      console.error('Erro ao rebater lead:', error);
+      toast.error('Erro ao rebater lead');
+    }
+  };
+
   const stats = {
     total: leads.length,
     quentes: leads.filter(l => l.temperatura === 'quente').length,
     frios: leads.filter(l => l.temperatura === 'frio').length,
     aprovados: leads.filter(l => l.status === 'aprovado').length,
+    paraRebater: leads.filter(l => needsRebate(l)).length,
   };
 
   if (loading) {
@@ -504,10 +570,34 @@ const LeadsSpreadsheet = ({
           <StatValue>{stats.aprovados}</StatValue>
           <StatSubtitle>Leads aprovados</StatSubtitle>
         </StatCard>
+
+        <StatCard
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+          style={{ 
+            border: stats.paraRebater > 0 ? '2px solid #ef4444' : '1px solid rgba(255, 255, 255, 0.2)',
+            background: stats.paraRebater > 0 ? 'rgba(239, 68, 68, 0.1)' : 'rgba(26, 26, 26, 0.6)'
+          }}
+        >
+          <StatHeader>
+            <StatTitle>
+              <MessageCircle size={16} />
+              Para Rebater
+            </StatTitle>
+            <StatIcon style={{ background: stats.paraRebater > 0 ? '#ef4444' : 'linear-gradient(135deg, #ffffff 0%, #e5e7eb 100%)' }}>
+              <MessageCircle size={16} />
+            </StatIcon>
+          </StatHeader>
+          <StatValue style={{ color: stats.paraRebater > 0 ? '#ef4444' : '#ffffff' }}>
+            {stats.paraRebater}
+          </StatValue>
+          <StatSubtitle>Leads pendentes há +2 dias</StatSubtitle>
+        </StatCard>
       </StatsGrid>
 
       <TableContainer>
-        <TableHeader columns="1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr">
+        <TableHeader columns="1fr 1fr 1fr 1fr 1fr 1fr 1fr 1.2fr">
           <div>Nome</div>
           <div>Telefone</div>
           <div>PV</div>
@@ -517,66 +607,80 @@ const LeadsSpreadsheet = ({
           <div>Temperatura</div>
           <div>Ações</div>
         </TableHeader>
-        {leads.map((lead, index) => (
-          <TableRow
-            key={lead.id}
-            columns="1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.05 }}
-          >
-            <TableCell bold>{lead.nome}</TableCell>
-            <TableCell>
-              <Phone size={14} />
-              {lead.telefone}
-            </TableCell>
-            <TableCell>{lead.pv}</TableCell>
-            <TableCell>{lead.ac}</TableCell>
-            <TableCell>{lead.ab}</TableCell>
-            <TableCell>
-              <StatusBadge status={lead.status}>
-                {lead.status === 'aprovado' && <CheckCircle size={12} />}
-                {lead.status === 'pendente' && <Clock size={12} />}
-                {lead.status === 'rejeitado' && <AlertCircle size={12} />}
-                {lead.status}
-              </StatusBadge>
-            </TableCell>
-            <TableCell>
-              <TemperatureIcon temperature={lead.temperatura}>
-                {lead.temperatura === 'quente' ? <Flame size={14} /> : <Snowflake size={14} />}
-                {lead.temperatura}
-              </TemperatureIcon>
-            </TableCell>
-            <TableCell>
-              <ActionButtons>
-                {lead.status === 'pendente' && (
-                  <>
+        {leads.map((lead, index) => {
+          const needsRebateNow = needsRebate(lead);
+          return (
+            <TableRow
+              key={lead.id}
+              columns="1fr 1fr 1fr 1fr 1fr 1fr 1fr 1.2fr"
+              needsRebate={needsRebateNow}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.05 }}
+            >
+              <TableCell bold>{lead.nome}</TableCell>
+              <TableCell>
+                <Phone size={14} />
+                {lead.telefone}
+              </TableCell>
+              <TableCell>{lead.pv}</TableCell>
+              <TableCell>{lead.ac}</TableCell>
+              <TableCell>{lead.ab}</TableCell>
+              <TableCell>
+                <StatusBadge status={lead.status}>
+                  {lead.status === 'aprovado' && <CheckCircle size={12} />}
+                  {lead.status === 'pendente' && <Clock size={12} />}
+                  {lead.status === 'rejeitado' && <AlertCircle size={12} />}
+                  {lead.status}
+                </StatusBadge>
+              </TableCell>
+              <TableCell>
+                <TemperatureIcon temperature={lead.temperatura}>
+                  {lead.temperatura === 'quente' ? <Flame size={14} /> : <Snowflake size={14} />}
+                  {lead.temperatura}
+                </TemperatureIcon>
+              </TableCell>
+              <TableCell>
+                <ActionButtons>
+                  {needsRebateNow && (
                     <ActionBtn 
-                      onClick={() => handleApproveLead(lead)}
-                      style={{ background: 'rgba(16, 185, 129, 0.2)', borderColor: '#10b981' }}
-                      title="Aprovar Lead"
+                      variant="rebate"
+                      onClick={() => handleRebateLead(lead)}
+                      title="Rebater Lead no WhatsApp"
                     >
-                      <UserCheck size={12} />
+                      <MessageCircle size={12} />
+                      Rebater
                     </ActionBtn>
-                    <ActionBtn 
-                      onClick={() => handleRejectLead(lead)}
-                      style={{ background: 'rgba(239, 68, 68, 0.2)', borderColor: '#ef4444' }}
-                      title="Rejeitar Lead"
-                    >
-                      <UserX size={12} />
-                    </ActionBtn>
-                  </>
-                )}
-                <ActionBtn onClick={() => onEditLead(lead)}>
-                  <Edit size={12} />
-                </ActionBtn>
-                <ActionBtn onClick={() => onDeleteLead(lead)}>
-                  <Trash2 size={12} />
-                </ActionBtn>
-              </ActionButtons>
-            </TableCell>
-          </TableRow>
-        ))}
+                  )}
+                  {lead.status === 'pendente' && (
+                    <>
+                      <ActionBtn 
+                        onClick={() => handleApproveLead(lead)}
+                        style={{ background: 'rgba(16, 185, 129, 0.2)', borderColor: '#10b981' }}
+                        title="Aprovar Lead"
+                      >
+                        <UserCheck size={12} />
+                      </ActionBtn>
+                      <ActionBtn 
+                        onClick={() => handleRejectLead(lead)}
+                        style={{ background: 'rgba(239, 68, 68, 0.2)', borderColor: '#ef4444' }}
+                        title="Rejeitar Lead"
+                      >
+                        <UserX size={12} />
+                      </ActionBtn>
+                    </>
+                  )}
+                  <ActionBtn onClick={() => onEditLead(lead)}>
+                    <Edit size={12} />
+                  </ActionBtn>
+                  <ActionBtn onClick={() => onDeleteLead(lead)}>
+                    <Trash2 size={12} />
+                  </ActionBtn>
+                </ActionButtons>
+              </TableCell>
+            </TableRow>
+          );
+        })}
       </TableContainer>
     </Container>
   );
