@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
-import { Trash2, Edit, DollarSign, TrendingUp, TrendingDown, Search, Filter } from 'lucide-react';
+import { Trash2, Edit, DollarSign, TrendingUp, TrendingDown, Search, Filter, RefreshCw, CheckCircle, Copy, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { formatCurrency } from '../utils/formatters';
 
@@ -38,6 +38,7 @@ const TransactionItem = styled(motion.div)`
   padding: 24px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   background: ${props => {
+    if (props.$isPaid) return 'linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(34, 197, 94, 0.2) 100%)';
     if (props.$isIncome) return 'linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(34, 197, 94, 0.1) 100%)';
     if (props.$isDebtor) return 'linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(217, 119, 6, 0.1) 100%)';
     return 'linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%)';
@@ -49,6 +50,8 @@ const TransactionItem = styled(motion.div)`
   position: relative;
   overflow: hidden;
   backdrop-filter: blur(5px);
+  opacity: ${props => props.$isPaid ? 0.8 : 1};
+  border: ${props => props.$isPaid ? '2px dashed rgba(16, 185, 129, 0.5)' : 'none'};
 
   &::before {
     content: '';
@@ -63,6 +66,7 @@ const TransactionItem = styled(motion.div)`
 
   &:hover {
     background: ${props => {
+      if (props.$isPaid) return 'linear-gradient(135deg, rgba(16, 185, 129, 0.3) 0%, rgba(34, 197, 94, 0.3) 100%)';
       if (props.$isIncome) return 'linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(34, 197, 94, 0.2) 100%)';
       if (props.$isDebtor) return 'linear-gradient(135deg, rgba(245, 158, 11, 0.2) 0%, rgba(217, 119, 6, 0.2) 100%)';
       return 'linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.2) 100%)';
@@ -70,6 +74,7 @@ const TransactionItem = styled(motion.div)`
     transform: translateY(-4px) translateX(4px);
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
     border-left: 4px solid ${props => {
+      if (props.$isPaid) return '#10b981';
       if (props.$isIncome) return '#10b981';
       if (props.$isDebtor) return '#f59e0b';
       return '#ef4444';
@@ -131,13 +136,35 @@ const ActionButton = styled.button`
   border-radius: 8px;
   transition: all 0.2s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 4px;
 
   &:hover {
-    background: ${props => props.$danger ? '#ef4444' : '#ffffff'};
-    border-color: ${props => props.$danger ? '#dc2626' : '#f3f4f6'};
-    color: ${props => props.$danger ? '#ffffff' : '#1a1a1a'};
+    background: ${props => {
+      if (props.$danger) return '#ef4444';
+      if (props.$success) return '#10b981';
+      if (props.$info) return '#3b82f6';
+      return '#ffffff';
+    }};
+    border-color: ${props => {
+      if (props.$danger) return '#dc2626';
+      if (props.$success) return '#059669';
+      if (props.$info) return '#2563eb';
+      return '#f3f4f6';
+    }};
+    color: ${props => {
+      if (props.$danger || props.$success || props.$info) return '#ffffff';
+      return '#1a1a1a';
+    }};
     transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
   }
 `;
 
@@ -153,6 +180,47 @@ const FilterContainer = styled.div`
   gap: 10px;
   margin-bottom: 15px;
   flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const FilterButtons = styled.div`
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+`;
+
+const RefreshButton = styled.button`
+  background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+
+  &:hover {
+    background: linear-gradient(135deg, #357ABD 0%, #2E6BA8 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(74, 144, 226, 0.4);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
 `;
 
 const FilterButton = styled.button`
@@ -176,7 +244,10 @@ const FilterButton = styled.button`
 const TransactionList = ({ onTransactionDeleted, filters = {} }) => {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('all');
+  const [refreshing, setRefreshing] = useState(false);
+  const [filter, setFilter] = useState(() => {
+    return localStorage.getItem('transactionFilter') || 'all';
+  });
 
   useEffect(() => {
     fetchTransactions();
@@ -190,8 +261,14 @@ const TransactionList = ({ onTransactionDeleted, filters = {} }) => {
     }
   }, [filters]);
 
-  const fetchTransactions = async () => {
+  const fetchTransactions = async (isRefresh = false) => {
     try {
+      if (isRefresh) {
+        setRefreshing(true);
+      } else {
+        setLoading(true);
+      }
+
       const { data, error } = await supabase
         .from('transactions')
         .select('*')
@@ -203,7 +280,17 @@ const TransactionList = ({ onTransactionDeleted, filters = {} }) => {
       console.error('Erro ao buscar transações:', error);
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
+  };
+
+  const handleRefresh = () => {
+    fetchTransactions(true);
+  };
+
+  const handleFilterChange = (newFilter) => {
+    setFilter(newFilter);
+    localStorage.setItem('transactionFilter', newFilter);
   };
 
   const applyFilters = async () => {
@@ -264,10 +351,107 @@ const TransactionList = ({ onTransactionDeleted, filters = {} }) => {
     }
   };
 
+  const handleMarkAsPaid = async (id) => {
+    if (!window.confirm('Marcar esta despesa como paga?')) return;
+
+    try {
+      const { error } = await supabase
+        .from('transactions')
+        .update({ 
+          paid: true, 
+          paid_date: new Date().toISOString().split('T')[0] 
+        })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setTransactions(prev => 
+        prev.map(t => 
+          t.id === id 
+            ? { ...t, paid: true, paid_date: new Date().toISOString().split('T')[0] }
+            : t
+        )
+      );
+      
+      if (onTransactionDeleted) {
+        onTransactionDeleted();
+      }
+    } catch (error) {
+      console.error('Erro ao marcar como pago:', error);
+      alert('Erro ao marcar como pago');
+    }
+  };
+
+  const handleGenerateNewTransaction = async (transaction) => {
+    if (!window.confirm('Gerar uma nova transação baseada nesta despesa?')) return;
+
+    try {
+      const newTransaction = {
+        description: `${transaction.description} (Gerada)`,
+        amount: transaction.amount,
+        type: transaction.type,
+        category: transaction.category,
+        date: new Date().toISOString().split('T')[0],
+        parent_transaction_id: transaction.id
+      };
+
+      const { data, error } = await supabase
+        .from('transactions')
+        .insert([newTransaction])
+        .select();
+
+      if (error) throw error;
+
+      // Atualizar a lista local
+      setTransactions(prev => [data[0], ...prev]);
+      
+      if (onTransactionDeleted) {
+        onTransactionDeleted();
+      }
+      
+      alert('Nova transação gerada com sucesso!');
+    } catch (error) {
+      console.error('Erro ao gerar nova transação:', error);
+      alert('Erro ao gerar nova transação');
+    }
+  };
+
+  const handleUnmarkAsPaid = async (id) => {
+    if (!window.confirm('Desmarcar esta despesa como paga?')) return;
+
+    try {
+      const { error } = await supabase
+        .from('transactions')
+        .update({ 
+          paid: false, 
+          paid_date: null 
+        })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setTransactions(prev => 
+        prev.map(t => 
+          t.id === id 
+            ? { ...t, paid: false, paid_date: null }
+            : t
+        )
+      );
+      
+      if (onTransactionDeleted) {
+        onTransactionDeleted();
+      }
+    } catch (error) {
+      console.error('Erro ao desmarcar como pago:', error);
+      alert('Erro ao desmarcar como pago');
+    }
+  };
+
   const filteredTransactions = transactions.filter(transaction => {
     if (filter === 'all') return true;
     if (filter === 'income') return transaction.type === 'income';
-    if (filter === 'expense') return transaction.type === 'expense';
+    if (filter === 'expense') return transaction.type === 'expense' && !transaction.paid;
+    if (filter === 'paid') return transaction.type === 'expense' && transaction.paid;
     if (filter === 'debtor') return transaction.type === 'debtor';
     return true;
   });
@@ -279,30 +463,51 @@ const TransactionList = ({ onTransactionDeleted, filters = {} }) => {
   return (
     <div>
       <FilterContainer>
-        <FilterButton 
-          $active={filter === 'all'} 
-          onClick={() => setFilter('all')}
+        <FilterButtons>
+          <FilterButton 
+            $active={filter === 'all'} 
+            onClick={() => handleFilterChange('all')}
+          >
+            Todas
+          </FilterButton>
+          <FilterButton 
+            $active={filter === 'income'} 
+            onClick={() => handleFilterChange('income')}
+          >
+            Receitas
+          </FilterButton>
+          <FilterButton 
+            $active={filter === 'expense'} 
+            onClick={() => handleFilterChange('expense')}
+          >
+            Despesas
+          </FilterButton>
+          <FilterButton 
+            $active={filter === 'paid'} 
+            onClick={() => handleFilterChange('paid')}
+          >
+            Pagas
+          </FilterButton>
+          <FilterButton 
+            $active={filter === 'debtor'} 
+            onClick={() => handleFilterChange('debtor')}
+          >
+            Devedores
+          </FilterButton>
+        </FilterButtons>
+        
+        <RefreshButton 
+          onClick={handleRefresh}
+          disabled={refreshing}
         >
-          Todas
-        </FilterButton>
-        <FilterButton 
-          $active={filter === 'income'} 
-          onClick={() => setFilter('income')}
-        >
-          Receitas
-        </FilterButton>
-        <FilterButton 
-          $active={filter === 'expense'} 
-          onClick={() => setFilter('expense')}
-        >
-          Despesas
-        </FilterButton>
-        <FilterButton 
-          $active={filter === 'debtor'} 
-          onClick={() => setFilter('debtor')}
-        >
-          Devedores
-        </FilterButton>
+          <RefreshCw 
+            size={14} 
+            style={{ 
+              animation: refreshing ? 'spin 1s linear infinite' : 'none' 
+            }} 
+          />
+          {refreshing ? 'Atualizando...' : 'Atualizar'}
+        </RefreshButton>
       </FilterContainer>
 
       <ListContainer>
@@ -323,6 +528,7 @@ const TransactionList = ({ onTransactionDeleted, filters = {} }) => {
                 key={transaction.id} 
                 $isIncome={transaction.type === 'income'}
                 $isDebtor={transaction.type === 'debtor'}
+                $isPaid={transaction.paid}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
@@ -339,6 +545,14 @@ const TransactionList = ({ onTransactionDeleted, filters = {} }) => {
                     <span>
                       {format(new Date(transaction.date), 'dd/MM/yyyy', { locale: ptBR })}
                     </span>
+                    {transaction.paid && (
+                      <>
+                        <span>•</span>
+                        <span style={{ color: '#10b981', fontWeight: '600' }}>
+                          ✓ Pago
+                        </span>
+                      </>
+                    )}
                   </TransactionDetails>
                 </TransactionInfo>
                 <TransactionAmount 
@@ -355,6 +569,33 @@ const TransactionList = ({ onTransactionDeleted, filters = {} }) => {
                   {formatCurrency(transaction.amount)}
                 </TransactionAmount>
                 <ActionButtons>
+                  {transaction.type === 'expense' && !transaction.paid && filter !== 'paid' && (
+                    <>
+                      <ActionButton 
+                        onClick={() => handleMarkAsPaid(transaction.id)} 
+                        $success
+                        title="Marcar como pago"
+                      >
+                        <CheckCircle size={16} />
+                      </ActionButton>
+                      <ActionButton 
+                        onClick={() => handleGenerateNewTransaction(transaction)} 
+                        $info
+                        title="Gerar nova transação"
+                      >
+                        <Copy size={16} />
+                      </ActionButton>
+                    </>
+                  )}
+                  {transaction.type === 'expense' && transaction.paid && filter === 'paid' && (
+                    <ActionButton 
+                      onClick={() => handleUnmarkAsPaid(transaction.id)} 
+                      $danger
+                      title="Desmarcar como pago"
+                    >
+                      <X size={16} />
+                    </ActionButton>
+                  )}
                   <ActionButton onClick={() => handleDelete(transaction.id)} $danger>
                     <Trash2 size={16} />
                   </ActionButton>

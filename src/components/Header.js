@@ -16,10 +16,19 @@ import {
   Cross,
   Users,
   Calendar,
-  DollarSign
+  DollarSign,
+  RefreshCw
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { formatCurrency } from '../utils/formatters';
+
+// Animações
+const spin = `
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+`;
 
 const HeaderContainer = styled.header`
   background: rgba(10, 10, 10, 0.8);
@@ -379,13 +388,18 @@ const Header = ({ onAddTransaction, onShowFilters, onExport, onShowCharts, activ
     transactionCount: 0
   });
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     fetchSummary();
   }, []);
 
-  const fetchSummary = async () => {
+  const fetchSummary = async (isRefresh = false) => {
     try {
+      if (isRefresh) {
+        setRefreshing(true);
+      }
+
       const { data, error } = await supabase
         .from('transactions')
         .select('*');
@@ -397,7 +411,7 @@ const Header = ({ onAddTransaction, onShowFilters, onExport, onShowCharts, activ
         .reduce((sum, t) => sum + t.amount, 0);
 
       const expense = data
-        .filter(t => t.type === 'expense')
+        .filter(t => t.type === 'expense' && !t.paid)
         .reduce((sum, t) => sum + t.amount, 0);
 
       const debtor = data
@@ -414,7 +428,12 @@ const Header = ({ onAddTransaction, onShowFilters, onExport, onShowCharts, activ
     } catch (error) {
       console.error('Erro ao buscar resumo:', error);
     } finally {
+      setRefreshing(false);
     }
+  };
+
+  const handleRefresh = () => {
+    fetchSummary(true);
   };
 
   const navItems = [
@@ -496,6 +515,23 @@ const Header = ({ onAddTransaction, onShowFilters, onExport, onShowCharts, activ
             >
               <Calculator size={16} />
               <span className="button-text">Nova Transação</span>
+            </ActionButton>
+
+            <ActionButton
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleRefresh}
+              disabled={refreshing}
+            >
+              <RefreshCw 
+                size={16} 
+                style={{ 
+                  animation: refreshing ? 'spin 1s linear infinite' : 'none' 
+                }} 
+              />
+              <span className="button-text">
+                {refreshing ? 'Atualizando...' : 'Atualizar'}
+              </span>
             </ActionButton>
 
             <ActionButton

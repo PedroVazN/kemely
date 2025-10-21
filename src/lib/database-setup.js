@@ -113,6 +113,8 @@ export const setupDatabase = async () => {
 // Função para buscar dados
 export const fetchData = async (tableName) => {
   try {
+    console.log(`Buscando dados de ${tableName}`);
+    
     const { data, error } = await supabase
       .from(tableName)
       .select('*')
@@ -123,6 +125,7 @@ export const fetchData = async (tableName) => {
       return [];
     }
 
+    console.log(`Dados buscados com sucesso de ${tableName}:`, data?.length || 0, 'registros');
     return data || [];
   } catch (error) {
     console.error(`Erro ao buscar dados de ${tableName}:`, error);
@@ -133,6 +136,8 @@ export const fetchData = async (tableName) => {
 // Função para inserir dados
 export const insertData = async (tableName, data) => {
   try {
+    console.log(`Inserindo dados em ${tableName}:`, data);
+    
     const { data: result, error } = await supabase
       .from(tableName)
       .insert([{
@@ -143,9 +148,11 @@ export const insertData = async (tableName, data) => {
 
     if (error) {
       console.error(`Erro ao inserir dados em ${tableName}:`, error);
+      console.error('Dados que causaram o erro:', data);
       throw error;
     }
 
+    console.log(`Dados inseridos com sucesso em ${tableName}:`, result);
     return result;
   } catch (error) {
     console.error(`Erro ao inserir dados em ${tableName}:`, error);
@@ -156,17 +163,24 @@ export const insertData = async (tableName, data) => {
 // Função para atualizar dados
 export const updateData = async (tableName, id, data) => {
   try {
+    console.log(`Atualizando dados em ${tableName} para ID ${id}:`, data);
+    
     const { data: result, error } = await supabase
       .from(tableName)
-      .update(data)
+      .update({
+        ...data,
+        updated_at: new Date().toISOString()
+      })
       .eq('id', id)
       .select();
 
     if (error) {
       console.error(`Erro ao atualizar dados em ${tableName}:`, error);
+      console.error('Dados que causaram o erro:', data);
       throw error;
     }
 
+    console.log(`Dados atualizados com sucesso em ${tableName}:`, result);
     return result;
   } catch (error) {
     console.error(`Erro ao atualizar dados em ${tableName}:`, error);
@@ -177,6 +191,8 @@ export const updateData = async (tableName, id, data) => {
 // Função para deletar dados
 export const deleteData = async (tableName, id) => {
   try {
+    console.log(`Deletando dados de ${tableName} com ID ${id}`);
+    
     const { error } = await supabase
       .from(tableName)
       .delete()
@@ -187,6 +203,7 @@ export const deleteData = async (tableName, id) => {
       throw error;
     }
 
+    console.log(`Dados deletados com sucesso de ${tableName}`);
     return true;
   } catch (error) {
     console.error(`Erro ao deletar dados de ${tableName}:`, error);

@@ -17,7 +17,8 @@ import {
   PieChart,
   Zap,
   Minus,
-  Plus
+  Plus,
+  RefreshCw
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { fetchData } from '../lib/database-setup';
@@ -355,6 +356,75 @@ const LoadingSpinner = styled.div`
   animation: spin 1s ease-in-out infinite;
 `;
 
+const DashboardHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding: 0 0 24px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+  }
+`;
+
+const DashboardTitle = styled.h1`
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  
+  @media (max-width: 768px) {
+    font-size: 2rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 1.75rem;
+  }
+`;
+
+const RefreshButton = styled.button`
+  background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 16px rgba(74, 144, 226, 0.3);
+
+  &:hover {
+    background: linear-gradient(135deg, #357ABD 0%, #2E6BA8 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(74, 144, 226, 0.4);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+`;
+
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState({
     monthlyIncome: 0,
@@ -367,13 +437,20 @@ const Dashboard = () => {
     recentTransactions: []
   });
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     fetchDashboardData();
   }, []);
 
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = async (isRefresh = false) => {
     try {
+      if (isRefresh) {
+        setRefreshing(true);
+      } else {
+        setLoading(true);
+      }
+
       const now = new Date();
       const startOfCurrentMonth = startOfMonth(now);
       const endOfCurrentMonth = endOfMonth(now);
@@ -394,7 +471,7 @@ const Dashboard = () => {
         .reduce((sum, t) => sum + t.amount, 0);
 
       const monthlyExpense = data
-        .filter(t => t.type === 'expense')
+        .filter(t => t.type === 'expense' && !t.paid)
         .reduce((sum, t) => sum + t.amount, 0);
 
       const monthlyDebtor = data
@@ -411,7 +488,7 @@ const Dashboard = () => {
         .reduce((sum, t) => sum + t.amount, 0);
 
       const weeklyExpense = weeklyData
-        .filter(t => t.type === 'expense')
+        .filter(t => t.type === 'expense' && !t.paid)
         .reduce((sum, t) => sum + t.amount, 0);
 
       const weeklyDebtor = weeklyData
@@ -435,7 +512,12 @@ const Dashboard = () => {
       console.error('Erro ao buscar dados do dashboard:', error);
     } finally {
       setLoading(false);
+      setRefreshing(false);
     }
+  };
+
+  const handleRefresh = () => {
+    fetchDashboardData(true);
   };
 
   if (loading) {
@@ -451,6 +533,22 @@ const Dashboard = () => {
 
   return (
     <DashboardContainer>
+      <DashboardHeader>
+        <DashboardTitle>Dashboard</DashboardTitle>
+        <RefreshButton 
+          onClick={handleRefresh}
+          disabled={refreshing}
+        >
+          <RefreshCw 
+            size={16} 
+            style={{ 
+              animation: refreshing ? 'spin 1s linear infinite' : 'none' 
+            }} 
+          />
+          {refreshing ? 'Atualizando...' : 'Atualizar'}
+        </RefreshButton>
+      </DashboardHeader>
+      
       <DashboardGrid>
         {/* Resumo Mensal */}
         <MainCard

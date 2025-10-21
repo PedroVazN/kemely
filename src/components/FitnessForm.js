@@ -383,13 +383,90 @@ const FitnessForm = ({ isOpen, onClose, onFitnessAdded, editingItem }) => {
       setLoading(true);
       setMessage('');
 
-      const dataToInsert = {
-        ...formData,
-        duration: formData.duration ? parseInt(formData.duration) : null,
-        calories: formData.calories ? parseInt(formData.calories) : null,
-        amount: formData.amount ? parseInt(formData.amount) : null,
-        hours: formData.hours ? parseFloat(formData.hours) : null
-      };
+      // Validação dos campos obrigatórios
+      if (!formData.date) {
+        setMessage('Data é obrigatória');
+        return;
+      }
+
+      // Preparar dados específicos para cada tipo de registro
+      let dataToInsert = {};
+
+      switch (formData.type) {
+        case 'workout':
+          if (!formData.exercise) {
+            setMessage('Exercício é obrigatório');
+            return;
+          }
+          if (!formData.duration || formData.duration <= 0) {
+            setMessage('Duração deve ser maior que 0');
+            return;
+          }
+          dataToInsert = {
+            date: formData.date,
+            exercise: formData.exercise,
+            duration: parseInt(formData.duration),
+            completed: formData.completed,
+            notes: formData.notes || null
+          };
+          break;
+        case 'meal':
+          if (!formData.meal_type) {
+            setMessage('Tipo de refeição é obrigatório');
+            return;
+          }
+          if (!formData.calories || formData.calories <= 0) {
+            setMessage('Calorias devem ser maiores que 0');
+            return;
+          }
+          dataToInsert = {
+            date: formData.date,
+            meal_type: formData.meal_type,
+            calories: parseInt(formData.calories),
+            healthy: formData.healthy,
+            notes: formData.notes || null
+          };
+          break;
+        case 'water':
+          if (!formData.amount || formData.amount <= 0) {
+            setMessage('Quantidade deve ser maior que 0');
+            return;
+          }
+          if (!formData.time) {
+            setMessage('Horário é obrigatório');
+            return;
+          }
+          dataToInsert = {
+            date: formData.date,
+            amount: parseInt(formData.amount),
+            time: formData.time,
+            notes: formData.notes || null
+          };
+          break;
+        case 'sleep':
+          if (!formData.bedtime) {
+            setMessage('Horário de dormir é obrigatório');
+            return;
+          }
+          if (!formData.wake_time) {
+            setMessage('Horário de acordar é obrigatório');
+            return;
+          }
+          if (!formData.hours || formData.hours <= 0) {
+            setMessage('Duração deve ser maior que 0');
+            return;
+          }
+          dataToInsert = {
+            date: formData.date,
+            bedtime: formData.bedtime,
+            wake_time: formData.wake_time,
+            hours: parseFloat(formData.hours),
+            notes: formData.notes || null
+          };
+          break;
+        default:
+          throw new Error('Tipo de registro inválido');
+      }
 
       const tableMap = {
         workout: 'fitness_workouts',
@@ -409,7 +486,7 @@ const FitnessForm = ({ isOpen, onClose, onFitnessAdded, editingItem }) => {
       onFitnessAdded();
     } catch (error) {
       console.error('Erro ao salvar:', error);
-      setMessage('Erro ao salvar registro');
+      setMessage(`Erro ao salvar registro: ${error.message}`);
     } finally {
       setLoading(false);
     }
