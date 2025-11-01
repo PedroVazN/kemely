@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { X, Clock, BookOpen, Book, Heart, Check } from 'lucide-react';
-import { format, addDays, startOfWeek } from 'date-fns';
+import { format, addDays, startOfWeek, endOfWeek } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { insertData, updateData } from '../lib/database-setup';
 
@@ -386,11 +386,13 @@ const DevotionalForm = ({ isOpen, onClose, onPlanAdded, editingItem, currentWeek
   useEffect(() => {
     if (isOpen && !editingItem) {
       // Quando o formulário abre sem item para editar, define a data padrão
+      const defaultDate = getDefaultDate();
       setFormData(prev => ({
         ...prev,
-        date: getDefaultDate()
+        date: defaultDate
       }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, editingItem, currentWeek]);
 
   useEffect(() => {

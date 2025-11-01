@@ -388,11 +388,13 @@ const WeeklyPlanForm = ({ isOpen, onClose, onPlanAdded, editingItem, currentWeek
   useEffect(() => {
     if (isOpen && !editingItem) {
       // Quando o formulário abre sem item para editar, define a data padrão
+      const defaultDate = getDefaultDate();
       setFormData(prev => ({
         ...prev,
-        date: getDefaultDate()
+        date: defaultDate
       }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, editingItem, currentWeek]);
 
   useEffect(() => {
