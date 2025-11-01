@@ -370,11 +370,36 @@ const WeeklyPlanForm = ({ isOpen, onClose, onPlanAdded, editingItem, currentWeek
   const weekStart = startOfWeek(currentWeek, { weekStartsOn: 1 });
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
+  // Função para obter a data padrão ao abrir o formulário
+  const getDefaultDate = () => {
+    const today = new Date();
+    const todayFormatted = format(today, 'yyyy-MM-dd');
+    
+    // Verifica se hoje está na semana atual sendo visualizada
+    const weekEnd = endOfWeek(currentWeek, { weekStartsOn: 1 });
+    if (today >= weekStart && today <= weekEnd) {
+      return todayFormatted;
+    }
+    
+    // Se não, retorna o primeiro dia da semana (segunda-feira)
+    return format(weekStart, 'yyyy-MM-dd');
+  };
+
+  useEffect(() => {
+    if (isOpen && !editingItem) {
+      // Quando o formulário abre sem item para editar, define a data padrão
+      setFormData(prev => ({
+        ...prev,
+        date: getDefaultDate()
+      }));
+    }
+  }, [isOpen, editingItem, currentWeek]);
+
   useEffect(() => {
     if (editingItem) {
       setFormData({
         type: editingItem.type || 'appointment',
-        date: editingItem.date || new Date().toISOString().split('T')[0],
+        date: editingItem.date || getDefaultDate(),
         activity: editingItem.activity || '',
         client_name: editingItem.client_name || '',
         client_phone: editingItem.client_phone || '',
@@ -395,7 +420,7 @@ const WeeklyPlanForm = ({ isOpen, onClose, onPlanAdded, editingItem, currentWeek
     } else {
       setFormData({
         type: 'personal',
-        date: getLocalDateString(),
+        date: getDefaultDate(),
         activity: '',
         client_name: '',
         client_phone: '',

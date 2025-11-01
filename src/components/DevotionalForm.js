@@ -368,19 +368,36 @@ const DevotionalForm = ({ isOpen, onClose, onPlanAdded, editingItem, currentWeek
   const weekStart = startOfWeek(currentWeek, { weekStartsOn: 1 });
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
-  useEffect(() => {
-    const getLocalDateString = () => {
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, '0');
-      const day = String(now.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`;
-    };
+  // Função para obter a data padrão ao abrir o formulário
+  const getDefaultDate = () => {
+    const today = new Date();
+    const todayFormatted = format(today, 'yyyy-MM-dd');
+    
+    // Verifica se hoje está na semana atual sendo visualizada
+    const weekEnd = endOfWeek(currentWeek, { weekStartsOn: 1 });
+    if (today >= weekStart && today <= weekEnd) {
+      return todayFormatted;
+    }
+    
+    // Se não, retorna o primeiro dia da semana (segunda-feira)
+    return format(weekStart, 'yyyy-MM-dd');
+  };
 
+  useEffect(() => {
+    if (isOpen && !editingItem) {
+      // Quando o formulário abre sem item para editar, define a data padrão
+      setFormData(prev => ({
+        ...prev,
+        date: getDefaultDate()
+      }));
+    }
+  }, [isOpen, editingItem, currentWeek]);
+
+  useEffect(() => {
     if (editingItem) {
       setFormData({
         type: editingItem.type || 'fasting',
-        date: editingItem.date || getLocalDateString(),
+        date: editingItem.date || getDefaultDate(),
         data_inicio: editingItem.data_inicio || '',
         data_termino: editingItem.data_termino || '',
         time: editingItem.time || '',
@@ -398,7 +415,7 @@ const DevotionalForm = ({ isOpen, onClose, onPlanAdded, editingItem, currentWeek
     } else {
       setFormData({
         type: 'fasting',
-        date: getLocalDateString(),
+        date: getDefaultDate(),
         data_inicio: '',
         data_termino: '',
         time: '',
