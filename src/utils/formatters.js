@@ -8,10 +8,33 @@ export const formatCurrency = (value) => {
   }).format(value);
 };
 
+/**
+ * Converte uma string de data no formato YYYY-MM-DD para um objeto Date local
+ * sem conversão de timezone, evitando o problema de "um dia antes"
+ */
+export const parseDateLocal = (dateString) => {
+  if (!dateString) return null;
+  
+  // Se já for um objeto Date, retorna
+  if (dateString instanceof Date) return dateString;
+  
+  // Para strings no formato YYYY-MM-DD
+  const parts = dateString.split('-');
+  if (parts.length === 3) {
+    const year = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10) - 1; // Mês é 0-indexado
+    const day = parseInt(parts[2], 10);
+    return new Date(year, month, day);
+  }
+  
+  // Fallback para parseISO
+  return parseISO(dateString);
+};
+
 export const formatDate = (date, formatStr = 'dd/MM/yyyy') => {
   if (!date) return '';
   
-  const dateObj = typeof date === 'string' ? parseISO(date) : date;
+  const dateObj = typeof date === 'string' ? parseDateLocal(date) : date;
   return format(dateObj, formatStr, { locale: ptBR });
 };
 

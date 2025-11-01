@@ -35,6 +35,7 @@ import { fetchData, insertData, updateData, deleteData } from '../lib/database-s
 import { format, addDays, startOfWeek, endOfWeek, isSameDay, isToday, isTomorrow, isYesterday } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import toast from 'react-hot-toast';
+import { formatDate } from '../utils/formatters';
 import DevotionalForm from './DevotionalForm';
 import EditDevotionalModal from './EditDevotionalModal';
 import DeleteConfirmModal from './DeleteConfirmModal';
@@ -900,7 +901,7 @@ const DevotionalPlanner = ({ onFormOpen, onEdit, onDelete, currentWeek, onWeekCh
                   transition={{ delay: index * 0.05 }}
                 >
                   <TableCell>
-                    {format(new Date(plan.date), 'dd/MM/yyyy', { locale: ptBR })}
+                    {formatDate(plan.date)}
                   </TableCell>
                   <TableCell bold>{plan.fast_type}</TableCell>
                   <TableCell>{plan.duration}h</TableCell>
@@ -948,7 +949,7 @@ const DevotionalPlanner = ({ onFormOpen, onEdit, onDelete, currentWeek, onWeekCh
                   transition={{ delay: index * 0.05 }}
                 >
                   <TableCell>
-                    {format(new Date(plan.date), 'dd/MM/yyyy', { locale: ptBR })}
+                    {formatDate(plan.date)}
                   </TableCell>
                   <TableCell>{plan.time}</TableCell>
                   <TableCell bold>{plan.theme}</TableCell>
@@ -1040,7 +1041,7 @@ const DevotionalPlanner = ({ onFormOpen, onEdit, onDelete, currentWeek, onWeekCh
                   transition={{ delay: index * 0.05 }}
                 >
                   <TableCell>
-                    {format(new Date(plan.date), 'dd/MM/yyyy', { locale: ptBR })}
+                    {formatDate(plan.date)}
                   </TableCell>
                   <TableCell>{plan.time}</TableCell>
                   <TableCell bold>{plan.activity}</TableCell>

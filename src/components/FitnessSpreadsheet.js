@@ -29,7 +29,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import { formatNumber } from '../utils/formatters';
+import { formatNumber, formatDate } from '../utils/formatters';
 import { fetchData, insertData, updateData, deleteData } from '../lib/database-setup';
 import { format, addDays, startOfWeek, endOfWeek } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -801,7 +801,7 @@ const FitnessSpreadsheet = ({ onFormOpen, onEdit, onDelete }) => {
                   transition={{ delay: index * 0.05 }}
                 >
                   <TableCell>
-                    {format(new Date(workout.date), 'dd/MM/yyyy', { locale: ptBR })}
+                    {formatDate(workout.date)}
                   </TableCell>
                   <TableCell bold>{workout.exercise}</TableCell>
                   <TableCell>{workout.duration} min</TableCell>
@@ -847,7 +847,7 @@ const FitnessSpreadsheet = ({ onFormOpen, onEdit, onDelete }) => {
                   transition={{ delay: index * 0.05 }}
                 >
                   <TableCell>
-                    {format(new Date(meal.date), 'dd/MM/yyyy', { locale: ptBR })}
+                    {formatDate(meal.date)}
                   </TableCell>
                   <TableCell bold>{meal.meal_type}</TableCell>
                   <TableCell>{meal.calories} cal</TableCell>
@@ -892,7 +892,7 @@ const FitnessSpreadsheet = ({ onFormOpen, onEdit, onDelete }) => {
                   transition={{ delay: index * 0.05 }}
                 >
                   <TableCell>
-                    {format(new Date(waterItem.date), 'dd/MM/yyyy', { locale: ptBR })}
+                    {formatDate(waterItem.date)}
                   </TableCell>
                   <TableCell bold>{waterItem.amount}ml</TableCell>
                   <TableCell>{waterItem.time}</TableCell>
@@ -933,7 +933,7 @@ const FitnessSpreadsheet = ({ onFormOpen, onEdit, onDelete }) => {
                   transition={{ delay: index * 0.05 }}
                 >
                   <TableCell>
-                    {format(new Date(sleepItem.date), 'dd/MM/yyyy', { locale: ptBR })}
+                    {formatDate(sleepItem.date)}
                   </TableCell>
                   <TableCell>{sleepItem.bedtime}</TableCell>
                   <TableCell>{sleepItem.wake_time}</TableCell>

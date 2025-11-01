@@ -36,6 +36,7 @@ import { fetchData, insertData, updateData, deleteData } from '../lib/database-s
 import { format, startOfWeek, endOfWeek, addDays, isSameDay, isToday, isTomorrow, isYesterday } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import toast from 'react-hot-toast';
+import { formatDate } from '../utils/formatters';
 import WeeklyPlanForm from './WeeklyPlanForm';
 import EditWeeklyPlanModal from './EditWeeklyPlanModal';
 import DeleteConfirmModal from './DeleteConfirmModal';
@@ -867,7 +868,7 @@ const WeeklyMetrics = ({ onFormOpen, onEdit, onDelete, currentWeek, onWeekChange
                   transition={{ delay: index * 0.05 }}
                 >
                   <TableCell>
-                    {format(new Date(plan.date), 'dd/MM/yyyy', { locale: ptBR })}
+                    {formatDate(plan.date)}
                   </TableCell>
                   <TableCell $bold>{plan.activity}</TableCell>
                   <TableCell>{plan.client_name || '-'}</TableCell>
@@ -927,7 +928,7 @@ const WeeklyMetrics = ({ onFormOpen, onEdit, onDelete, currentWeek, onWeekChange
                     transition={{ delay: index * 0.05 }}
                   >
                     <TableCell>
-                      {format(new Date(plan.date), 'dd/MM/yyyy', { locale: ptBR })}
+                      {formatDate(plan.date)}
                     </TableCell>
                     <TableCell>
                       <StatusBadge status="scheduled">

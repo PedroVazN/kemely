@@ -16,7 +16,7 @@ import { supabase } from '../lib/supabase';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import toast from 'react-hot-toast';
-import { formatCurrency } from '../utils/formatters';
+import { formatCurrency, formatDate } from '../utils/formatters';
 
 const Container = styled.div`
   background: rgba(42, 42, 42, 0.8);
@@ -499,9 +499,9 @@ const CommissionsSpreadsheet = ({
             <TableCell>{commission.produto}</TableCell>
             <TableCell>{formatCurrency(parseFloat(commission.valor))}</TableCell>
             <TableCell bold style={{ color: '#ffffff' }}>{formatCurrency(parseFloat(commission.comissao))}</TableCell>
-            <TableCell>{format(new Date(commission.data_venda), 'dd/MM/yyyy', { locale: ptBR })}</TableCell>
+            <TableCell>{formatDate(commission.data_venda)}</TableCell>
             <TableCell>
-              {commission.data_pagamento ? format(new Date(commission.data_pagamento), 'dd/MM/yyyy', { locale: ptBR }) : '-'}
+              {commission.data_pagamento ? formatDate(commission.data_pagamento) : '-'}
             </TableCell>
             <TableCell>
               <StatusBadge status={commission.status}>
