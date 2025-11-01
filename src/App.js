@@ -465,16 +465,24 @@ const App = () => {
   };
 
   const handleCommissionFormOpen = () => {
+    setSelectedCommission(null);
     setShowCommissionForm(true);
   };
 
   const handleCommissionFormClose = () => {
     setShowCommissionForm(false);
+    setSelectedCommission(null);
   };
 
   const handleCommissionFormSubmit = () => {
     setRefreshKey(prev => prev + 1);
     setShowCommissionForm(false);
+    setSelectedCommission(null);
+  };
+
+  const handleEditCommission = (commission) => {
+    setSelectedCommission(commission);
+    setShowCommissionForm(true);
   };
 
   const handleEditLead = (lead) => {
@@ -586,6 +594,7 @@ const App = () => {
         return (
           <CommissionsSpreadsheet
             onCommissionFormOpen={handleCommissionFormOpen}
+            onEditCommission={handleEditCommission}
             onDeleteCommission={handleDeleteCommission}
           />
         );
@@ -832,6 +841,7 @@ const App = () => {
             isOpen={showCommissionForm}
             onClose={handleCommissionFormClose}
             onCommissionAdded={handleCommissionFormSubmit}
+            editingItem={selectedCommission}
           />
         )}
       </AnimatePresence>

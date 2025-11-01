@@ -311,9 +311,18 @@ const SuccessMessage = styled.div`
 `;
 
 const FitnessForm = ({ isOpen, onClose, onFitnessAdded, editingItem }) => {
+  // Função para obter a data local no formato YYYY-MM-DD
+  const getLocalDateString = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const [formData, setFormData] = useState({
     type: 'workout',
-    date: new Date().toISOString().split('T')[0],
+    date: getLocalDateString(),
     exercise: '',
     duration: '',
     completed: true,
@@ -331,10 +340,18 @@ const FitnessForm = ({ isOpen, onClose, onFitnessAdded, editingItem }) => {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
+    const getLocalDateString = () => {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
     if (editingItem) {
       setFormData({
         type: editingItem.type || 'workout',
-        date: editingItem.date || new Date().toISOString().split('T')[0],
+        date: editingItem.date || getLocalDateString(),
         exercise: editingItem.exercise || '',
         duration: editingItem.duration || '',
         completed: editingItem.completed !== undefined ? editingItem.completed : true,
@@ -351,7 +368,7 @@ const FitnessForm = ({ isOpen, onClose, onFitnessAdded, editingItem }) => {
     } else {
       setFormData({
         type: 'workout',
-        date: new Date().toISOString().split('T')[0],
+        date: getLocalDateString(),
         exercise: '',
         duration: '',
         completed: true,

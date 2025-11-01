@@ -319,6 +319,7 @@ const ActionBtn = styled.button`
 
 const CommissionsSpreadsheet = ({ 
   onCommissionFormOpen,
+  onEditCommission,
   onDeleteCommission
 }) => {
   const [commissions, setCommissions] = useState([]);
@@ -514,7 +515,7 @@ const CommissionsSpreadsheet = ({
                 <ActionBtn>
                   <Eye size={12} />
                 </ActionBtn>
-                <ActionBtn>
+                <ActionBtn onClick={() => onEditCommission(commission)}>
                   <Edit size={12} />
                 </ActionBtn>
                 <ActionBtn onClick={() => onDeleteCommission(commission)}>

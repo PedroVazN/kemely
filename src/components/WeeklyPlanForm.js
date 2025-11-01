@@ -335,9 +335,18 @@ const DayButton = styled.button`
 `;
 
 const WeeklyPlanForm = ({ isOpen, onClose, onPlanAdded, editingItem, currentWeek }) => {
+  // Função para obter a data local no formato YYYY-MM-DD
+  const getLocalDateString = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const [formData, setFormData] = useState({
     type: 'personal',
-    date: new Date().toISOString().split('T')[0],
+    date: getLocalDateString(),
     activity: '',
     client_name: '',
     client_phone: '',
@@ -386,7 +395,7 @@ const WeeklyPlanForm = ({ isOpen, onClose, onPlanAdded, editingItem, currentWeek
     } else {
       setFormData({
         type: 'personal',
-        date: new Date().toISOString().split('T')[0],
+        date: getLocalDateString(),
         activity: '',
         client_name: '',
         client_phone: '',

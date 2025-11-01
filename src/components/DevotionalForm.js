@@ -336,9 +336,18 @@ const DayButton = styled.button`
 `;
 
 const DevotionalForm = ({ isOpen, onClose, onPlanAdded, editingItem, currentWeek }) => {
+  // Função para obter a data local no formato YYYY-MM-DD
+  const getLocalDateString = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const [formData, setFormData] = useState({
     type: 'fasting',
-    date: new Date().toISOString().split('T')[0],
+    date: getLocalDateString(),
     data_inicio: '',
     data_termino: '',
     time: '',
@@ -360,10 +369,18 @@ const DevotionalForm = ({ isOpen, onClose, onPlanAdded, editingItem, currentWeek
   const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
 
   useEffect(() => {
+    const getLocalDateString = () => {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
     if (editingItem) {
       setFormData({
         type: editingItem.type || 'fasting',
-        date: editingItem.date || new Date().toISOString().split('T')[0],
+        date: editingItem.date || getLocalDateString(),
         data_inicio: editingItem.data_inicio || '',
         data_termino: editingItem.data_termino || '',
         time: editingItem.time || '',
@@ -381,7 +398,7 @@ const DevotionalForm = ({ isOpen, onClose, onPlanAdded, editingItem, currentWeek
     } else {
       setFormData({
         type: 'fasting',
-        date: new Date().toISOString().split('T')[0],
+        date: getLocalDateString(),
         data_inicio: '',
         data_termino: '',
         time: '',

@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import { X, DollarSign, User, Package, Calendar, CheckCircle } from 'lucide-react';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import toast from 'react-hot-toast';
-import { insertData } from '../lib/database-setup';
+import { insertData, updateData } from '../lib/database-setup';
 
 const FormContainer = styled(motion.div)`
   position: fixed;
@@ -185,7 +185,7 @@ const Button = styled(motion.button)`
   `}
 `;
 
-const CommissionForm = ({ isOpen, onClose, onCommissionAdded }) => {
+const CommissionForm = ({ isOpen, onClose, onCommissionAdded, editingItem }) => {
   const [formData, setFormData] = useState({
     cliente: '',
     produto: '',
@@ -196,6 +196,32 @@ const CommissionForm = ({ isOpen, onClose, onCommissionAdded }) => {
     status: 'pendente',
     observacoes: ''
   });
+
+  useEffect(() => {
+    if (editingItem) {
+      setFormData({
+        cliente: editingItem.cliente || '',
+        produto: editingItem.produto || '',
+        valor: editingItem.valor || '',
+        comissao: editingItem.comissao || '',
+        data_venda: editingItem.data_venda || '',
+        data_pagamento: editingItem.data_pagamento || '',
+        status: editingItem.status || 'pendente',
+        observacoes: editingItem.observacoes || ''
+      });
+    } else {
+      setFormData({
+        cliente: '',
+        produto: '',
+        valor: '',
+        comissao: '',
+        data_venda: '',
+        data_pagamento: '',
+        status: 'pendente',
+        observacoes: ''
+      });
+    }
+  }, [editingItem, isOpen]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -218,15 +244,20 @@ const CommissionForm = ({ isOpen, onClose, onCommissionAdded }) => {
     e.preventDefault();
     
     try {
-      const dataToInsert = {
+      const dataToSave = {
         ...formData,
         valor: parseFloat(formData.valor),
         comissao: parseFloat(formData.comissao)
       };
       
-      await insertData('comissoes', dataToInsert);
+      if (editingItem) {
+        await updateData('comissoes', editingItem.id, dataToSave);
+        toast.success('Comissão atualizada com sucesso!');
+      } else {
+        await insertData('comissoes', dataToSave);
+        toast.success('Comissão criada com sucesso!');
+      }
       
-      toast.success('Comissão criada com sucesso!');
       onCommissionAdded();
       onClose();
       
@@ -242,8 +273,8 @@ const CommissionForm = ({ isOpen, onClose, onCommissionAdded }) => {
         observacoes: ''
       });
     } catch (error) {
-      console.error('Erro ao criar comissão:', error);
-      toast.error('Erro ao criar comissão');
+      console.error('Erro ao salvar comissão:', error);
+      toast.error('Erro ao salvar comissão');
     }
   };
 
@@ -265,7 +296,7 @@ const CommissionForm = ({ isOpen, onClose, onCommissionAdded }) => {
         <FormHeader>
           <FormTitle>
             <DollarSign size={24} />
-            Nova Comissão
+            {editingItem ? 'Editar Comissão' : 'Nova Comissão'}
           </FormTitle>
           <CloseButton onClick={onClose}>
             <X size={20} />
@@ -402,7 +433,7 @@ const CommissionForm = ({ isOpen, onClose, onCommissionAdded }) => {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
             >
-              Criar Comissão
+              {editingItem ? 'Atualizar Comissão' : 'Criar Comissão'}
             </Button>
           </ButtonGroup>
         </form>

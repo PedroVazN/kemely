@@ -120,12 +120,21 @@ const SuccessMessage = styled.div`
 `;
 
 const TransactionForm = ({ onTransactionAdded }) => {
+  // Função para obter a data local no formato YYYY-MM-DD
+  const getLocalDateString = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const [formData, setFormData] = useState({
     description: '',
     amount: '',
     type: 'expense',
     category: '',
-    date: new Date().toISOString().split('T')[0]
+    date: getLocalDateString()
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -166,7 +175,7 @@ const TransactionForm = ({ onTransactionAdded }) => {
         amount: '',
         type: 'expense',
         category: '',
-        date: new Date().toISOString().split('T')[0]
+        date: getLocalDateString()
       });
       
       if (onTransactionAdded) {

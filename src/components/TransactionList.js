@@ -354,12 +354,23 @@ const TransactionList = ({ onTransactionDeleted, filters = {} }) => {
   const handleMarkAsPaid = async (id) => {
     if (!window.confirm('Marcar esta despesa como paga?')) return;
 
+    // Função para obter a data local no formato YYYY-MM-DD
+    const getLocalDateString = () => {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
+    const paidDate = getLocalDateString();
+
     try {
       const { error } = await supabase
         .from('transactions')
         .update({ 
           paid: true, 
-          paid_date: new Date().toISOString().split('T')[0] 
+          paid_date: paidDate 
         })
         .eq('id', id);
 
@@ -368,7 +379,7 @@ const TransactionList = ({ onTransactionDeleted, filters = {} }) => {
       setTransactions(prev => 
         prev.map(t => 
           t.id === id 
-            ? { ...t, paid: true, paid_date: new Date().toISOString().split('T')[0] }
+            ? { ...t, paid: true, paid_date: paidDate }
             : t
         )
       );
@@ -385,13 +396,22 @@ const TransactionList = ({ onTransactionDeleted, filters = {} }) => {
   const handleGenerateNewTransaction = async (transaction) => {
     if (!window.confirm('Gerar uma nova transação baseada nesta despesa?')) return;
 
+    // Função para obter a data local no formato YYYY-MM-DD
+    const getLocalDateString = () => {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
     try {
       const newTransaction = {
         description: `${transaction.description} (Gerada)`,
         amount: transaction.amount,
         type: transaction.type,
         category: transaction.category,
-        date: new Date().toISOString().split('T')[0],
+        date: getLocalDateString(),
         parent_transaction_id: transaction.id
       };
 
